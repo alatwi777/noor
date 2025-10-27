@@ -1,0 +1,981 @@
+]<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تقييم الطلاب</title>
+    <style>
+        :root {
+            --primary-color: #1a4f8c;
+            --secondary-color: #2e7d32;
+            --light-color: #f5f5f5;
+            --border-color: #ddd;
+            --hover-color: #e3f2fd;
+            --warning-color: #ffebee;
+            --warning-border: #ffcdd2;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .export-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .export-btn:hover {
+            background-color: #1b5e20;
+        }
+        
+        /* تنسيقات التبويبات */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background-color: #f1f1f1;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* تنسيقات الجدول */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .column-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .column-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .column-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--light-color);
+        }
+        
+        tr:hover {
+            background-color: var(--hover-color);
+        }
+        
+        /* التمييز الشرطي للطلاب الذين مجموعهم أقل من 70 */
+        tr.low-score {
+            background-color: var(--warning-color) !important;
+            border-left: 3px solid #f44336;
+        }
+        
+        tr.low-score:hover {
+            background-color: #ffdbdb !important;
+        }
+        
+        tr.low-score td {
+            border-color: var(--warning-border);
+        }
+        
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+        }
+        
+        .total-cell {
+            font-weight: bold;
+            background-color: #e8f5e9;
+        }
+        
+        .total-cell.low-score {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+        
+        .auto-save-notice {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+        
+        /* تنسيقات قسم الكتب الدراسية */
+        .books-container {
+            height: 600px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .books-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* تنسيقات قسم اليوتيوب */
+        .youtube-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .youtube-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .youtube-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .youtube-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .youtube-videos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .youtube-video {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .youtube-video iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        .video-title {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .remove-video {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .buttons-container {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+            }
+            
+            .column-btn {
+                font-size: 12px;
+                padding: 3px 6px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .youtube-videos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>نظام تقييم الطلاب</h1>
+            <div class="buttons-container">
+                <button class="export-btn" id="exportBtn">تصدير CSV</button>
+            </div>
+        </header>
+        
+        <!-- التبويبات -->
+        <div class="tabs">
+            <button class="tab active" data-tab="kashf">الكشف</button>
+            <button class="tab" data-tab="books">الكتب الدراسية</button>
+            <button class="tab" data-tab="youtube">يوتيوب</button>
+        </div>
+        
+        <!-- محتوى تبويب الكشف -->
+        <div class="tab-content active" id="kashf-tab">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>اسم الطالب</th>
+                        <th>الفصل</th>
+                        <th>
+                            <div class="column-header">
+                                <span>التقويمات التحريرية (60)</span>
+                                <button class="column-btn" id="all60Btn">الجميع ٦٠</button>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-header">
+                                <span>المهام الأدائية والمشاركة (40)</span>
+                                <button class="column-btn" id="all40Btn">الجميع ٤٠</button>
+                            </div>
+                        </th>
+                        <th>المجموع (100)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="auto-save-notice">سيتم حفظ جميع التغييرات تلقائياً</div>
+        </div>
+        
+        <!-- محتوى تبويب الكتب الدراسية -->
+        <div class="tab-content" id="books-tab">
+            <div class="books-container">
+                <iframe class="books-iframe" id="booksIframe" src="https://ktby.net"></iframe>
+            </div>
+        </div>
+        
+        <!-- محتوى تبويب اليوتيوب -->
+        <div class="tab-content" id="youtube-tab">
+            <div class="youtube-container">
+                <div class="youtube-input">
+                    <input type="text" id="youtubeUrl" placeholder="أدخل رابط فيديو يوتيوب هنا...">
+                    <button id="addVideoBtn">إضافة الفيديو</button>
+                </div>
+                
+                <div class="youtube-videos" id="youtubeVideos">
+                    <!-- سيتم إضافة مقاطع الفيديو هنا -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الطلاب من ملف Excel (جميع البيانات الكاملة)
+        const studentsData = [
+            { name: "أسامه ماجد عبيدالله العنزي", class: "اول ١" },
+            { name: "امجد اكرم سيف سعيد", class: "اول ١" },
+            { name: "ايوب طلال محمد الحويطي", class: "اول ١" },
+            { name: "بدر علي فالح البلوي", class: "اول ١" },
+            { name: "ثامر يحي علي المجرشي", class: "اول ١" },
+            { name: "جهاد عفنان سالم العطوي", class: "اول ١" },
+            { name: "حسان صلاح سلمان البلوي", class: "اول ١" },
+            { name: "خالد عمر بن محمد البلوي", class: "اول ١" },
+            { name: "راشد حسن حماد البلوي", class: "اول ١" },
+            { name: "راكان نزال عيد العطوي", class: "اول ١" },
+            { name: "ريان عوده عبدالله العطوي", class: "اول ١" },
+            { name: "ريان نايف هويمل العطوي", class: "اول ١" },
+            { name: "سطام خالد مسعد البلوي", class: "اول ١" },
+            { name: "سعد سالم سعد الحويطي", class: "اول ١" },
+            { name: "سعود ابن محمود بن احمد بن ناصر أبو فراكه العطوي", class: "اول ١" },
+            { name: "سلطان عيد سالم العطوي", class: "اول ١" },
+            { name: "سليمان سالم سليمان العنزي", class: "اول ١" },
+            { name: "سليمان ضيف الله سعد الحويطى", class: "اول ١" },
+            { name: "سهم بندر عائض البلوي", class: "اول ١" },
+            { name: "صقر صالح خلف البلوي", class: "اول ١" },
+            { name: "طلال عبدالعزيز عيد البلوي", class: "اول ١" },
+            { name: "طلال محمد سالم الحويطي", class: "اول ١" },
+            { name: "عبدالرحمن يوسف بن سلمان البلوي", class: "اول ١" },
+            { name: "عبدالكريم سالم محمد العطوي", class: "اول ١" },
+            { name: "عبدالله بن محمد بن سالم بن سويلم الشمالي العطوي", class: "اول ١" },
+            { name: "عبدالله محمد هليل العطوي", class: "اول ١" },
+            { name: "عدي أحمد حماد الحويطي", class: "اول ١" },
+            { name: "عز الدين خليل قيدوم", class: "اول ١" },
+            { name: "عزام عفنان سالم العطوي", class: "اول ١" },
+            { name: "علي سعد محمد العمري", class: "اول ١" },
+            { name: "عماد عواد مسلم البلوي", class: "اول ١" },
+            { name: "عواد محمد عواد العطوي", class: "اول ١" },
+            { name: "غالب فارس سليم سلامه العطوي", class: "اول ١" },
+            { name: "فارس عواد حميد العطوي", class: "اول ١" },
+            { name: "فهد أحمد محمد العطوي", class: "اول ١" },
+            { name: "فهد محمد بن حمد البلوي", class: "اول ١" },
+            { name: "ماهر عبدالله عيد العطوي", class: "اول ١" },
+            { name: "محمد سعيد سالم الحويطي", class: "اول ١" },
+            { name: "محمد متعب يحي الزهراني", class: "اول ١" },
+            { name: "محمد مشعل محمد العنزي", class: "اول ١" },
+            { name: "مخلد فوزي مخلد المطيري", class: "اول ١" },
+            { name: "مشاري محمد صالح القرني", class: "اول ١" },
+            { name: "معاذ عبدالرحيم ضيف الله العطوي", class: "اول ١" },
+            { name: "مقرن بن عبداللطيف بن محمد البلوي", class: "اول ١" },
+            { name: "أحمد محمد سلامه العطوي", class: "اول ٢" },
+            { name: "اسامه احمد عوده العطوي", class: "اول ٢" },
+            { name: "الوليد سلمان علي العطوي", class: "اول ٢" },
+            { name: "اياد محمد سالم البلوي", class: "اول ٢" },
+            { name: "ايهاب محمد سالم العطوي", class: "اول ٢" },
+            { name: "باسل سالم محمد العطوي", class: "اول ٢" },
+            { name: "بتال نائف سليمان العطوي", class: "اول ٢" },
+            { name: "بدر حسن عوض البارقي", class: "اول ٢" },
+            { name: "تركي أبراهيم سالم العطوي", class: "اول ٢" },
+            { name: "ثامر احمد خضر العطوي", class: "اول ٢" },
+            { name: "ثامر مطير صالح العطوي", class: "اول ٢" },
+            { name: "حاتم عبدالله سليم الجوهري", class: "اول ٢" },
+            { name: "حاتم عوض معوض العنزي", class: "اول ٢" },
+            { name: "حمد على محمد صالح", class: "اول ٢" },
+            { name: "خالد محمد صقر العطوي", class: "اول ٢" },
+            { name: "ريان أبراهيم سالم العطوي", class: "اول ٢" },
+            { name: "سعد صائل متعب البلوي", class: "اول ٢" },
+            { name: "صالح سليمان صالح العطوي", class: "اول ٢" },
+            { name: "طارق عبدالهادي عوض العطوي", class: "اول ٢" },
+            { name: "عبدالعزيز سلامه عليان العطوي", class: "اول ٢" },
+            { name: "عبدالله ابراهيم دعسان العمراني", class: "اول ٢" },
+            { name: "عبدالله حماد عوده العطوي", class: "اول ٢" },
+            { name: "عبدالله علي حسن عسيري", class: "اول ٢" },
+            { name: "عبدالله مسلم سالم العازمي", class: "اول ٢" },
+            { name: "عمر لافي بن صالح عنزي", class: "اول ٢" },
+            { name: "عناد سلامه سويرح العطوي", class: "اول ٢" },
+            { name: "فايز فيصل مصلح البلوي", class: "اول ٢" },
+            { name: "فواز عايش سليمان العطوي", class: "اول ٢" },
+            { name: "فيصل عبدالكريم عتيق العطوي", class: "اول ٢" },
+            { name: "ماجد فضل عوض البلوي", class: "اول ٢" },
+            { name: "مالك سالم عطاالله العطوي", class: "اول ٢" },
+            { name: "مبارك فتحي سعيد", class: "اول ٢" },
+            { name: "محمد عواد عطاالله العطوي", class: "اول ٢" },
+            { name: "محمد مسلم محمد العطوي", class: "اول ٢" },
+            { name: "محمد يحي محمد العمري", class: "اول ٢" },
+            { name: "مروان فايز سالم العطوي", class: "اول ٢" },
+            { name: "معاذ عادل محمد البلوي", class: "اول ٢" },
+            { name: "معاذ فهد عويض العطوي", class: "اول ٢" },
+            { name: "معاذ فواز احمد العطوي", class: "اول ٢" },
+            { name: "منتصر محمد الامين", class: "اول ٢" },
+            { name: "نايف عواد عليان العطوي", class: "اول ٢" },
+            { name: "هيثم عبدالمجيد نازل البلوي", class: "اول ٢" },
+            { name: "يزن نايف عياده البلوي", class: "اول ٢" },
+            { name: "يزيد فيصل مصلح البلوي", class: "اول ٢" },
+            { name: "يونس نور الدين حمود الحامدي", class: "اول ٢" },
+            { name: "أحمد عبدالرحمن احمد العطوي", class: "ثاني ١" },
+            { name: "باسل فرج عياد البلوي", class: "ثاني ١" },
+            { name: "بدر سعود عوده العطوي", class: "ثاني ١" },
+            { name: "تركي عواد علي الحويطي", class: "ثاني ١" },
+            { name: "جهاد احمد سلامه العطوي", class: "ثاني ١" },
+            { name: "حسان فياض عبيد العنزي", class: "ثاني ١" },
+            { name: "خالد حسن غبري القرني", class: "ثاني ١" },
+            { name: "خالد شامخ عبيد الرشيدي", class: "ثاني ١" },
+            { name: "راكان عوده عفنان العطوي", class: "ثاني ١" },
+            { name: "رائد نافع بن سعد الحويطي", class: "ثاني ١" },
+            { name: "زياد حسن قاسم آل سعيده", class: "ثاني ١" },
+            { name: "سعود سليمان عبيد البلوي", class: "ثاني ١" },
+            { name: "سلطان سلمان محمد العطوي", class: "ثاني ١" },
+            { name: "سيف معزي منصور السحيمي", class: "ثاني ١" },
+            { name: "طلال فايز بن فهد البلوي", class: "ثاني ١" },
+            { name: "عادل محمد بن عوده البلوي", class: "ثاني ١" },
+            { name: "عبدالاله سالم عتيق العطوي", class: "ثاني ١" },
+            { name: "عبدالحميد حماد طلب الحويطي", class: "ثاني ١" },
+            { name: "عبدالرحمن احمد سليمان الفيفي", class: "ثاني ١" },
+            { name: "عبدالله احمد خلف البلوي", class: "ثاني ١" },
+            { name: "عبدالله فالح خضير العنزي", class: "ثاني ١" },
+            { name: "عز احمد عوده العطوي", class: "ثاني ١" },
+            { name: "عمر فرج حاسن الجهني", class: "ثاني ١" },
+            { name: "عمران فيصل خليف العنزي", class: "ثاني ١" },
+            { name: "فارس حسن غبري القرني", class: "ثاني ١" },
+            { name: "فارس حسين شوعي هزازي", class: "ثاني ١" },
+            { name: "فيراس بن صالح محمد الخيبري", class: "ثاني ١" },
+            { name: "فيصل فرحان سعيد العطوي", class: "ثاني ١" },
+            { name: "مازن خالد خضر العطوي", class: "ثاني ١" },
+            { name: "مالك محمد سليمان العطوي", class: "ثاني ١" },
+            { name: "محمد احمد محمد السريبطي", class: "ثاني ١" },
+            { name: "محمد بن شائم بن رديعان العنزي", class: "ثاني ١" },
+            { name: "محمد مسند محمد دخيل الله", class: "ثاني ١" },
+            { name: "مراد رجاء حمدان البلوي", class: "ثاني ١" },
+            { name: "مروان عوده عفنان العطوي", class: "ثاني ١" },
+            { name: "مشاري قاسم مرزوق العطوي", class: "ثاني ١" },
+            { name: "مهند راشد جابر مساوى", class: "ثاني ١" },
+            { name: "نايف يحيى مغدر الجابري", class: "ثاني ١" },
+            { name: "نواف علي بن سلمان العطوي", class: "ثاني ١" },
+            { name: "وليد عياد سويلم الحويطي", class: "ثاني ١" },
+            { name: "اسامه لافي عوده العطوي", class: "ثاني ٢" },
+            { name: "البراء محمد بن حسن الفيفي", class: "ثاني ٢" },
+            { name: "الوليد طلال عبيدالله العنزي", class: "ثاني ٢" },
+            { name: "أنس حمد محمد العطوي", class: "ثاني ٢" },
+            { name: "أنس صالح عيد الغنامي", class: "ثاني ٢" },
+            { name: "بدران محمد بن حامد البلوي", class: "ثاني ٢" },
+            { name: "جاسم عيد سالم العطوي", class: "ثاني ٢" },
+            { name: "حامد سالم بن عليان العطوي", class: "ثاني ٢" },
+            { name: "حذيفه فواز قائد ثابت", class: "ثاني ٢" },
+            { name: "حسام بن لافي بن صالح الجعفري العنزي", class: "ثاني ٢" },
+            { name: "حسام عيد بن راضي البلوي", class: "ثاني ٢" },
+            { name: "حميد عيد حميد العمرانى", class: "ثاني ٢" },
+            { name: "رامي فالح صالح البلوي", class: "ثاني ٢" },
+            { name: "ريان فايز سالم العطوي", class: "ثاني ٢" },
+            { name: "سلطان عبدالعزيز عيد البلوي", class: "ثاني ٢" },
+            { name: "سلطان عواد حماد العطوي", class: "ثاني ٢" },
+            { name: "طلال سالم عواد العطوي", class: "ثاني ٢" },
+            { name: "طلال محمود هويمل العطوي", class: "ثاني ٢" },
+            { name: "عارف نائف حمدان البلوي", class: "ثاني ٢" },
+            { name: "عبدالرحمن محمد عوض العطوي", class: "ثاني ٢" },
+            { name: "عبدالله محمد صالح البلوي", class: "ثاني ٢" },
+            { name: "عساف عادل حسن الحويطي", class: "ثاني ٢" },
+            { name: "علي فايز عبدالله العطوي", class: "ثاني ٢" },
+            { name: "علي مساعد مسيب الحويطي", class: "ثاني ٢" },
+            { name: "عمر عواد حماد العطوي", class: "ثاني ٢" },
+            { name: "ماهر صالح مسلم البلوي", class: "ثاني ٢" },
+            { name: "محمد اسعد خضر العطوي", class: "ثاني ٢" },
+            { name: "محمد سلطان سلامه العطوي", class: "ثاني ٢" },
+            { name: "محمد عواد بن حسين الحويطي", class: "ثاني ٢" },
+            { name: "ناصر صلفيق سويلم العنزي", class: "ثاني ٢" },
+            { name: "نايف سلامه عتيق العطوي", class: "ثاني ٢" },
+            { name: "نايف سمير - الحسين", class: "ثاني ٢" },
+            { name: "نايف علي مسعد البلوي", class: "ثاني ٢" },
+            { name: "نايف عمر بن محمد البلوي", class: "ثاني ٢" },
+            { name: "نواف سليم ناصر البلوي", class: "ثاني ٢" },
+            { name: "ياسر احمد عوض العطوي", class: "ثاني ٢" },
+            { name: "ياسر سعد مصلح العطوي", class: "ثاني ٢" },
+            { name: "ياسر محمد بن حامد البلوي", class: "ثاني ٢" },
+            { name: "يزن عبدالله زامل النفيعي", class: "ثاني ٢" },
+            { name: "يوسف انور محمد عبدالله", class: "ثاني ٢" },
+            { name: "يوسف عيد صبحى العطوى", class: "ثاني ٢" },
+            { name: "يوسف مسعد سلامه البلوي", class: "ثاني ٢" },
+            { name: "احمد عواد مسلم الحويطي", class: "ثالث ١" },
+            { name: "أنس محمد عايد الحويطي", class: "ثالث ١" },
+            { name: "اياد محمد سالم العطوي", class: "ثالث ١" },
+            { name: "بندر فايز كريم العنزي", class: "ثالث ١" },
+            { name: "ثامر احمد عوض العطوي", class: "ثالث ١" },
+            { name: "حمود عبدالله سلمان الحويطي", class: "ثالث ١" },
+            { name: "ريان عواد عطاالله العطوي", class: "ثالث ١" },
+            { name: "زياد محمد غازي العنزي", class: "ثالث ١" },
+            { name: "سلامه احمد سلامه العطوي", class: "ثالث ١" },
+            { name: "سلطان عبدالمهدي عوده العطوي", class: "ثالث ١" },
+            { name: "سلطان عبدالوالي مقبول الشراري", class: "ثالث ١" },
+            { name: "سيف سعود ابن سالم العازمي", class: "ثالث ١" },
+            { name: "طويرح عبدالله طويرح البلوي", class: "ثالث ١" },
+            { name: "عبدالرحيم عواد مزيد العطوي", class: "ثالث ١" },
+            { name: "عبدالله سليمان سالم العطوي", class: "ثالث ١" },
+            { name: "علي محمد بن جابر دغريري", class: "ثالث ١" },
+            { name: "علي يحي علي المجرشي", class: "ثالث ١" },
+            { name: "عناد عبدالهادي عوض العطوي", class: "ثالث ١" },
+            { name: "فادي عواد حميد العطوي", class: "ثالث ١" },
+            { name: "فيصل أبراهيم سالم العطوي", class: "ثالث ١" },
+            { name: "فيصل بشير بن عواد العطوى", class: "ثالث ١" },
+            { name: "متعب عبدالله متعب البلوي", class: "ثالث ١" },
+            { name: "محمد فؤاد محمد الزهراني", class: "ثالث ١" },
+            { name: "مراد عواد مسلم البلوي", class: "ثالث ١" },
+            { name: "مشعل تركي علي عواجي", class: "ثالث ١" },
+            { name: "مشعل خلف فريج البلوي", class: "ثالث ١" },
+            { name: "معاذ مفرح عبدالله العنزي", class: "ثالث ١" },
+            { name: "مهند ابراهيم مشوح العنزي", class: "ثالث ١" },
+            { name: "وليد سلامه بن صالح العطوي", class: "ثالث ١" },
+            { name: "ياسر عايش سليمان العطوي", class: "ثالث ١" },
+            { name: "يزن سعد ابن مشوح العنزي", class: "ثالث ١" },
+            { name: "يزيد عبدالله عمر البلوي", class: "ثالث ١" },
+            { name: "اسامه سالم حمود العطوي", class: "ثالث ٢" },
+            { name: "اسامه صالح جازي البلوي", class: "ثالث ٢" },
+            { name: "باسل فهد معوض العطوي", class: "ثالث ٢" },
+            { name: "تركي خالد محمد البلوي", class: "ثالث ٢" },
+            { name: "حسين محمد سعيدان", class: "ثالث ٢" },
+            { name: "حمدان عبد الله ابراهيم العطوي", class: "ثالث ٢" },
+            { name: "خالد عيد عقلا البلوي", class: "ثالث ٢" },
+            { name: "سعد سلمان علي العطوي", class: "ثالث ٢" },
+            { name: "سلطان طلال عواد البلوي", class: "ثالث ٢" },
+            { name: "سلطان عيد عبيد البلوي", class: "ثالث ٢" },
+            { name: "سلطان محمد بن عوده العطوي", class: "ثالث ٢" },
+            { name: "صقر محمد غضيان العنزي", class: "ثالث ٢" },
+            { name: "عادل عوده لافي العطوي", class: "ثالث ٢" },
+            { name: "عبدالعزيز سلمان سويرح العطوي", class: "ثالث ٢" },
+            { name: "عبدالعزيز يحي محمد هروبي", class: "ثالث ٢" },
+            { name: "عبدالمجيد عبدالله بن علي جراح", class: "ثالث ٢" },
+            { name: "عبدالمجيد محمد صقر العطوي", class: "ثالث ٢" },
+            { name: "عثمان محمد صالح البلوي", class: "ثالث ٢" },
+            { name: "عصام حمد محمد العرماني", class: "ثالث ٢" },
+            { name: "عمار بندر سالم العطوي", class: "ثالث ٢" },
+            { name: "عمار فرحان هليل البلوي", class: "ثالث ٢" },
+            { name: "عمر حمود احمد العطوي", class: "ثالث ٢" },
+            { name: "فواز سعيد عيد الحويطي", class: "ثالث ٢" },
+            { name: "فيصل سعود ماشع المطيري", class: "ثالث ٢" },
+            { name: "فيصل متعب يحي الزهراني", class: "ثالث ٢" },
+            { name: "متعب صائل متعب البلوي", class: "ثالث ٢" },
+            { name: "محمد علي احمد الجيزاني", class: "ثالث ٢" },
+            { name: "مروان عبدالعزيز سليم العطوي", class: "ثالث ٢" },
+            { name: "نايف عوده عيد العطوي", class: "ثالث ٢" },
+            { name: "ياسر محمد بن عوده العطوي", class: "ثالث ٢" },
+            { name: "احمد وليد بركات بركات", class: "ثالث ٣" },
+            { name: "جاسم عياد سويلم الحويطي", class: "ثالث ٣" },
+            { name: "حاتم احمد سليمان الحويطي", class: "ثالث ٣" },
+            { name: "حسين محمد جابر دغريري", class: "ثالث ٣" },
+            { name: "خالد محمد بن حمد البلوي", class: "ثالث ٣" },
+            { name: "خالد محمد سلامه العطوي", class: "ثالث ٣" },
+            { name: "ريان فوزي مخلد المطيري", class: "ثالث ٣" },
+            { name: "زايد ابراهيم احمد الهلالي", class: "ثالث ٣" },
+            { name: "زياد محمد سالم الحويطي", class: "ثالث ٣" },
+            { name: "سعود حمود سعود الجنبه", class: "ثالث ٣" },
+            { name: "سلطان خالد مسعد البلوي", class: "ثالث ٣" },
+            { name: "صبر عوض بن صبر البلوي", class: "ثالث ٣" },
+            { name: "طارق زياد مطلق الحويطي", class: "ثالث ٣" },
+            { name: "عبدالله أحمد محمد العطوي", class: "ثالث ٣" },
+            { name: "عبدالله عايد شنوان العنزي", class: "ثالث ٣" },
+            { name: "عبدالمجيد عناد جزاء المطيري", class: "ثالث ٣" },
+            { name: "عمر صلاح سلمان البلوي", class: "ثالث ٣" },
+            { name: "عمر عبدالله عوده الطقيقي", class: "ثالث ٣" },
+            { name: "فايز سليمان صالح العطوي", class: "ثالث ٣" },
+            { name: "فواز عمر سليمان العطوي", class: "ثالث ٣" },
+            { name: "فيصل حضيري عيسى العنزي", class: "ثالث ٣" },
+            { name: "فيصل محمد سلامه العطوي", class: "ثالث ٣" },
+            { name: "متعب يحي علي عائضي", class: "ثالث ٣" },
+            { name: "محمد سالم محمد العطوي", class: "ثالث ٣" },
+            { name: "معاذ عبدالرحمن مبروك العرادي", class: "ثالث ٣" },
+            { name: "معتز محمد ابراهيم الحويطي", class: "ثالث ٣" },
+            { name: "نادر خميس عتيق العطوي", class: "ثالث ٣" },
+            { name: "نواف عواد عليان العطوي", class: "ثالث ٣" },
+            { name: "يحيى عواد حماد العطوي", class: "ثالث ٣" }
+        ];
+
+        // توليد خيارات القوائم المنسدلة
+        function generateOptions(max, step) {
+            let options = '<option value="0">0</option>';
+            for (let i = step; i <= max; i += step) {
+                options += `<option value="${i}">${i}</option>`;
+            }
+            return options;
+        }
+
+        // ملء الجدول ببيانات الطلاب
+        function populateTable() {
+            const tbody = document.querySelector('#studentsTable tbody');
+            tbody.innerHTML = '';
+            
+            studentsData.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.class}</td>
+                    <td>
+                        <select class="written-eval" data-index="${index}">
+                            ${generateOptions(60, 5)}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="performance-task" data-index="${index}">
+                            ${generateOptions(40, 5)}
+                        </select>
+                    </td>
+                    <td class="total-cell" id="total-${index}">0</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // تحميل البيانات المحفوظة
+            loadSavedData();
+            
+            // إضافة مستمعي الأحداث
+            addEventListeners();
+        }
+
+        // تحديث المجموع والتمييز الشرطي
+        function updateTotal(index) {
+            const writtenEval = document.querySelector(`.written-eval[data-index="${index}"]`);
+            const performanceTask = document.querySelector(`.performance-task[data-index="${index}"]`);
+            const totalCell = document.getElementById(`total-${index}`);
+            const row = totalCell.closest('tr');
+            
+            const writtenValue = parseInt(writtenEval.value) || 0;
+            const performanceValue = parseInt(performanceTask.value) || 0;
+            const total = writtenValue + performanceValue;
+            
+            totalCell.textContent = total;
+            
+            // التمييز الشرطي - إذا كان المجموع أقل من 70
+            if (total < 70) {
+                row.classList.add('low-score');
+                totalCell.classList.add('low-score');
+            } else {
+                row.classList.remove('low-score');
+                totalCell.classList.remove('low-score');
+            }
+            
+            // حفظ البيانات
+            saveData();
+        }
+
+        // تعيين 60 درجة للجميع في التقويمات التحريرية
+        function setAll60() {
+            document.querySelectorAll('.written-eval').forEach(select => {
+                select.value = '60';
+                const index = select.getAttribute('data-index');
+                updateTotal(index);
+            });
+        }
+
+        // تعيين 40 درجة للجميع في المهام الأدائية
+        function setAll40() {
+            document.querySelectorAll('.performance-task').forEach(select => {
+                select.value = '40';
+                const index = select.getAttribute('data-index');
+                updateTotal(index);
+            });
+        }
+
+        // إضافة مستمعي الأحداث
+        function addEventListeners() {
+            // أحداث التبويبات
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // إزالة النشاط من جميع التبويبات
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // إضافة النشاط للتبويب المحدد
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            // أحداث الجدول
+            document.querySelectorAll('.written-eval, .performance-task').forEach(select => {
+                select.addEventListener('change', function() {
+                    const index = this.getAttribute('data-index');
+                    updateTotal(index);
+                });
+            });
+            
+            // زر التصدير
+            document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+            
+            // زر الجميع 60
+            document.getElementById('all60Btn').addEventListener('click', setAll60);
+            
+            // زر الجميع 40
+            document.getElementById('all40Btn').addEventListener('click', setAll40);
+            
+            // إضافة فيديو يوتيوب
+            document.getElementById('addVideoBtn').addEventListener('click', addYouTubeVideo);
+            
+            // إضافة فيديو يوتيوب عند الضغط على Enter
+            document.getElementById('youtubeUrl').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addYouTubeVideo();
+                }
+            });
+        }
+
+        // استخراج معرف فيديو يوتيوب من الرابط
+        function extractYouTubeId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length === 11) ? match[7] : false;
+        }
+
+        // إضافة فيديو يوتيوب
+        function addYouTubeVideo() {
+            const urlInput = document.getElementById('youtubeUrl');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('يرجى إدخال رابط فيديو يوتيوب');
+                return;
+            }
+            
+            const videoId = extractYouTubeId(url);
+            if (!videoId) {
+                alert('رابط يوتيوب غير صحيح');
+                return;
+            }
+            
+            // استخراج عنوان الفيديو
+            const videoTitle = `فيديو يوتيوب ${new Date().toLocaleDateString('ar-SA')}`;
+            
+            // إضافة الفيديو إلى القائمة
+            addVideoToDisplay(videoId, videoTitle);
+            
+            // حفظ الفيديو في التخزين المحلي
+            saveYouTubeVideo(videoId, videoTitle);
+            
+            // مسح حقل الإدخال
+            urlInput.value = '';
+        }
+
+        // إضافة فيديو للعرض
+        function addVideoToDisplay(videoId, title) {
+            const videosContainer = document.getElementById('youtubeVideos');
+            
+            // إزالة حالة عدم وجود فيديوهات إذا كانت موجودة
+            const emptyState = videosContainer.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            const videoElement = document.createElement('div');
+            videoElement.className = 'youtube-video';
+            videoElement.innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+                <div class="video-title">${title}</div>
+                <button class="remove-video" data-id="${videoId}">إزالة الفيديو</button>
+            `;
+            videosContainer.appendChild(videoElement);
+            
+            // إضافة حدث إزالة الفيديو
+            videoElement.querySelector('.remove-video').addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                removeYouTubeVideo(id);
+                videoElement.remove();
+                
+                // إظهار حالة عدم وجود فيديوهات إذا لم يعد هناك أي فيديو
+                if (videosContainer.children.length === 0) {
+                    showEmptyState();
+                }
+            });
+        }
+
+        // إزالة فيديو يوتيوب
+        function removeYouTubeVideo(videoId) {
+            const savedVideos = getSavedYouTubeVideos();
+            const updatedVideos = savedVideos.filter(video => video.id !== videoId);
+            localStorage.setItem('youtubeVideos', JSON.stringify(updatedVideos));
+        }
+
+        // حفظ فيديو يوتيوب
+        function saveYouTubeVideo(videoId, title) {
+            const savedVideos = getSavedYouTubeVideos();
+            savedVideos.push({ id: videoId, title: title });
+            localStorage.setItem('youtubeVideos', JSON.stringify(savedVideos));
+        }
+
+        // الحصول على فيديوهات يوتيوب المحفوظة
+        function getSavedYouTubeVideos() {
+            const saved = localStorage.getItem('youtubeVideos');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        // تحميل فيديوهات يوتيوب المحفوظة
+        function loadYouTubeVideos() {
+            const savedVideos = getSavedYouTubeVideos();
+            const videosContainer = document.getElementById('youtubeVideos');
+            
+            if (savedVideos.length === 0) {
+                showEmptyState();
+                return;
+            }
+            
+            savedVideos.forEach(video => {
+                addVideoToDisplay(video.id, video.title);
+            });
+        }
+
+        // عرض حالة عدم وجود فيديوهات
+        function showEmptyState() {
+            const videosContainer = document.getElementById('youtubeVideos');
+            videosContainer.innerHTML = '<div class="empty-state">لا توجد مقاطع فيديو مضافة بعد</div>';
+        }
+
+        // حفظ البيانات في localStorage
+        function saveData() {
+            const data = [];
+            document.querySelectorAll('.written-eval, .performance-task').forEach(select => {
+                const index = select.getAttribute('data-index');
+                const type = select.classList.contains('written-eval') ? 'written' : 'performance';
+                
+                if (!data[index]) {
+                    data[index] = { written: 0, performance: 0 };
+                }
+                
+                data[index][type] = parseInt(select.value) || 0;
+            });
+            
+            localStorage.setItem('studentsEvaluation', JSON.stringify(data));
+        }
+
+        // تحميل البيانات المحفوظة
+        function loadSavedData() {
+            const savedData = localStorage.getItem('studentsEvaluation');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                data.forEach((studentData, index) => {
+                    if (studentData) {
+                        const writtenEval = document.querySelector(`.written-eval[data-index="${index}"]`);
+                        const performanceTask = document.querySelector(`.performance-task[data-index="${index}"]`);
+                        
+                        if (writtenEval) writtenEval.value = studentData.written;
+                        if (performanceTask) performanceTask.value = studentData.performance;
+                        
+                        updateTotal(index);
+                    }
+                });
+            }
+        }
+
+        // تصدير البيانات إلى CSV
+        function exportToCSV() {
+            let csvContent = "اسم الطالب,الفصل,التقويمات التحريرية,المهام الأدائية والمشاركة,المجموع\n";
+            
+            studentsData.forEach((student, index) => {
+                const writtenEval = document.querySelector(`.written-eval[data-index="${index}"]`);
+                const performanceTask = document.querySelector(`.performance-task[data-index="${index}"]`);
+                const totalCell = document.getElementById(`total-${index}`);
+                
+                const writtenValue = writtenEval ? writtenEval.value : 0;
+                const performanceValue = performanceTask ? performanceTask.value : 0;
+                const total = totalCell ? totalCell.textContent : 0;
+                
+                csvContent += `"${student.name}","${student.class}",${writtenValue},${performanceValue},${total}\n`;
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "تقييم_الطلاب.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            populateTable();
+            loadYouTubeVideos();
+            
+            // تحميل التبويب النشط من التخزين المحلي
+            const activeTab = localStorage.getItem('activeTab') || 'kashf';
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.getAttribute('data-tab') === activeTab) {
+                    tab.click();
+                }
+            });
+            
+            // حفظ التبويب النشط عند التغيير
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    localStorage.setItem('activeTab', tabId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
