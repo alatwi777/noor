@@ -1,4 +1,4 @@
-]<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -13,92 +13,169 @@
             --hover-color: #e3f2fd;
             --warning-color: #ffebee;
             --warning-border: #ffcdd2;
+            --tab-gradient: linear-gradient(145deg, #ffffff, #e6e6e6);
+            --tab-shadow: 5px 5px 15px rgba(0,0,0,0.1), -5px -5px 15px rgba(255,255,255,0.7);
+            --tab-active-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7);
+        }
+        
+        * {
+            box-sizing: border-box;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f9f9f9;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
+            min-height: 100vh;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
         
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
         }
         
         h1 {
             color: var(--primary-color);
             margin: 0;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .buttons-container {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
         
         .export-btn {
-            background-color: var(--secondary-color);
+            background: linear-gradient(145deg, var(--secondary-color), #1b5e20);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 24px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
         }
         
         .export-btn:hover {
-            background-color: #1b5e20;
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.25);
         }
         
-        /* تنسيقات التبويبات */
-        .tabs {
+        /* تنسيقات التبويبات الرئيسية */
+        .main-tabs {
             display: flex;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 25px;
+            background: var(--tab-gradient);
+            border-radius: 15px 15px 0 0;
+            padding: 10px 10px 0 10px;
+            box-shadow: var(--tab-shadow);
         }
         
-        .tab {
-            padding: 12px 24px;
-            background-color: #f1f1f1;
+        .main-tab {
+            padding: 15px 30px;
+            background: var(--tab-gradient);
             border: none;
-            border-bottom: 3px solid transparent;
+            border-radius: 15px 15px 0 0;
             cursor: pointer;
             font-size: 16px;
-            transition: all 0.3s;
-        }
-        
-        .tab:hover {
-            background-color: #e9e9e9;
-        }
-        
-        .tab.active {
-            background-color: white;
-            border-bottom: 3px solid var(--primary-color);
             font-weight: bold;
+            transition: all 0.3s;
+            margin-right: 5px;
+            box-shadow: var(--tab-shadow);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 7px 7px 15px rgba(0,0,0,0.15);
+        }
+        
+        .main-tab.active {
+            background: white;
+            box-shadow: var(--tab-active-shadow);
+            transform: translateY(5px);
+            border-bottom: 3px solid white;
+        }
+        
+        /* تنسيقات التبويبات الفرعية */
+        .sub-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: var(--tab-gradient);
+            border-radius: 12px;
+            box-shadow: var(--tab-shadow);
+        }
+        
+        .sub-tab {
+            padding: 12px 24px;
+            background: var(--tab-gradient);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: var(--tab-shadow);
+        }
+        
+        .sub-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.15);
+        }
+        
+        .sub-tab.active {
+            background: linear-gradient(145deg, var(--primary-color), #0d3a6e);
+            color: white;
+            box-shadow: var(--tab-active-shadow);
         }
         
         .tab-content {
             display: none;
+            animation: fadeIn 0.5s ease-in-out;
         }
         
         .tab-content.active {
             display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         /* تنسيقات الجدول */
@@ -106,41 +183,47 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-radius: 10px;
+            overflow: hidden;
         }
         
         th, td {
             border: 1px solid var(--border-color);
-            padding: 12px;
+            padding: 14px;
             text-align: center;
         }
         
         th {
-            background-color: var(--primary-color);
+            background: linear-gradient(145deg, var(--primary-color), #0d3a6e);
             color: white;
             font-weight: bold;
             position: relative;
+            font-size: 16px;
         }
         
         .column-header {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
         
         .column-btn {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.3);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 5px 10px;
-            border-radius: 3px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.3s;
+            font-weight: bold;
         }
         
         .column-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
         }
         
         tr:nth-child(even) {
@@ -149,12 +232,14 @@
         
         tr:hover {
             background-color: var(--hover-color);
+            transform: scale(1.01);
+            transition: transform 0.2s;
         }
         
         /* التمييز الشرطي للطلاب الذين مجموعهم أقل من 70 */
         tr.low-score {
             background-color: var(--warning-color) !important;
-            border-left: 3px solid #f44336;
+            border-left: 4px solid #f44336;
         }
         
         tr.low-score:hover {
@@ -167,35 +252,48 @@
         
         select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 8px;
             background-color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 79, 140, 0.2);
         }
         
         .total-cell {
             font-weight: bold;
-            background-color: #e8f5e9;
+            background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
         }
         
         .total-cell.low-score {
-            background-color: #ffcdd2;
+            background: linear-gradient(145deg, #ffcdd2, #ef9a9a);
             color: #c62828;
         }
         
         .auto-save-notice {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
             color: var(--secondary-color);
             font-style: italic;
+            padding: 15px;
+            background: var(--light-color);
+            border-radius: 10px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
         }
         
         /* تنسيقات قسم الكتب الدراسية */
         .books-container {
-            height: 600px;
+            height: 650px;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .books-iframe {
@@ -208,78 +306,126 @@
         .youtube-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
         }
         
         .youtube-input {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 25px;
         }
         
         .youtube-input input {
             flex: 1;
-            padding: 10px;
+            padding: 14px;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 16px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
         }
         
         .youtube-input button {
-            background-color: var(--primary-color);
+            background: linear-gradient(145deg, var(--primary-color), #0d3a6e);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 14px 28px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .youtube-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.25);
         }
         
         .youtube-videos {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
         }
         
         .youtube-video {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: var(--tab-gradient);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--tab-shadow);
+            transition: all 0.3s;
+        }
+        
+        .youtube-video:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 20px rgba(0,0,0,0.15);
         }
         
         .youtube-video iframe {
             width: 100%;
             height: 200px;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
         }
         
         .video-title {
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: bold;
             text-align: center;
+            font-size: 16px;
         }
         
         .remove-video {
-            background-color: #e74c3c;
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
             width: 100%;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .remove-video:hover {
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
         }
         
         .empty-state {
             text-align: center;
-            padding: 40px;
+            padding: 50px;
             color: #666;
             font-style: italic;
+            font-size: 18px;
+            background: var(--light-color);
+            border-radius: 15px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        /* تنسيقات الاستجابة */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .main-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .main-tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
         }
         
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
             header {
                 flex-direction: column;
                 gap: 15px;
@@ -295,19 +441,19 @@
             }
             
             th, td {
-                padding: 8px 5px;
+                padding: 10px 6px;
             }
             
             .column-btn {
                 font-size: 12px;
-                padding: 3px 6px;
+                padding: 4px 8px;
             }
             
-            .tabs {
+            .main-tabs, .sub-tabs {
                 flex-direction: column;
             }
             
-            .tab {
+            .main-tab, .sub-tab {
                 width: 100%;
                 text-align: center;
             }
@@ -321,24 +467,26 @@
 <body>
     <div class="container">
         <header>
-            <h1>نظام تقييم الطلاب</h1>
+            <h1>🎓 نظام تقييم الطلاب المتكامل</h1>
             <div class="buttons-container">
-                <button class="export-btn" id="exportBtn">تصدير CSV</button>
+                <button class="export-btn" id="exportBtn">📊 تصدير CSV</button>
             </div>
         </header>
         
-        <!-- التبويبات -->
-        <div class="tabs">
-            <button class="tab active" data-tab="kashf">الكشف</button>
-            <button class="tab" data-tab="books">الكتب الدراسية</button>
-            <button class="tab" data-tab="youtube">يوتيوب</button>
+        <!-- التبويبات الرئيسية -->
+        <div class="main-tabs">
+            <button class="main-tab active" data-tab="kashf">📋 الكشف العام</button>
+            <button class="main-tab" data-tab="classes">🏫 الفصول الدراسية</button>
+            <button class="main-tab" data-tab="books">📚 الكتب الدراسية</button>
+            <button class="main-tab" data-tab="youtube">🎬 يوتيوب</button>
         </div>
         
-        <!-- محتوى تبويب الكشف -->
+        <!-- محتوى تبويب الكشف العام -->
         <div class="tab-content active" id="kashf-tab">
             <table id="studentsTable">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>اسم الطالب</th>
                         <th>الفصل</th>
                         <th>
@@ -361,7 +509,73 @@
                 </tbody>
             </table>
             
-            <div class="auto-save-notice">سيتم حفظ جميع التغييرات تلقائياً</div>
+            <div class="auto-save-notice">💾 سيتم حفظ جميع التغييرات تلقائياً</div>
+        </div>
+        
+        <!-- محتوى تبويب الفصول الدراسية -->
+        <div class="tab-content" id="classes-tab">
+            <!-- التبويبات الفرعية للفصول -->
+            <div class="sub-tabs">
+                <button class="sub-tab active" data-subtab="class1">اول ١</button>
+                <button class="sub-tab" data-subtab="class2">اول ٢</button>
+                <button class="sub-tab" data-subtab="class3">ثاني ١</button>
+                <button class="sub-tab" data-subtab="class4">ثاني ٢</button>
+                <button class="sub-tab" data-subtab="class5">ثالث ١</button>
+                <button class="sub-tab" data-subtab="class6">ثالث ٢</button>
+                <button class="sub-tab" data-subtab="class7">ثالث ٣</button>
+            </div>
+            
+            <!-- محتوى الفصول -->
+            <div class="class-content active" id="class1-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الطالب</th>
+                            <th>
+                                <div class="column-header">
+                                    <span>التقويمات التحريرية (60)</span>
+                                    <button class="column-btn" data-class="class1" data-type="written">الجميع ٦٠</button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="column-header">
+                                    <span>المهام الأدائية والمشاركة (40)</span>
+                                    <button class="column-btn" data-class="class1" data-type="performance">الجميع ٤٠</button>
+                                </div>
+                            </th>
+                            <th>المجموع (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class1-table">
+                        <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="class-content" id="class2-content">
+                <!-- نفس هيكل class1-content -->
+            </div>
+            
+            <div class="class-content" id="class3-content">
+                <!-- نفس هيكل class1-content -->
+            </div>
+            
+            <div class="class-content" id="class4-content">
+                <!-- نفس هيكل class1-content -->
+            </div>
+            
+            <div class="class-content" id="class5-content">
+                <!-- نفس هيكل class1-content -->
+            </div>
+            
+            <div class="class-content" id="class6-content">
+                <!-- نفس هيكل class1-content -->
+            </div>
+            
+            <div class="class-content" id="class7-content">
+                <!-- نفس هيكل class1-content -->
+            </div>
         </div>
         
         <!-- محتوى تبويب الكتب الدراسية -->
@@ -376,7 +590,7 @@
             <div class="youtube-container">
                 <div class="youtube-input">
                     <input type="text" id="youtubeUrl" placeholder="أدخل رابط فيديو يوتيوب هنا...">
-                    <button id="addVideoBtn">إضافة الفيديو</button>
+                    <button id="addVideoBtn">➕ إضافة الفيديو</button>
                 </div>
                 
                 <div class="youtube-videos" id="youtubeVideos">
@@ -389,6 +603,7 @@
     <script>
         // بيانات الطلاب من ملف Excel (جميع البيانات الكاملة)
         const studentsData = [
+            // أول ١ (44 طالب)
             { name: "أسامه ماجد عبيدالله العنزي", class: "اول ١" },
             { name: "امجد اكرم سيف سعيد", class: "اول ١" },
             { name: "ايوب طلال محمد الحويطي", class: "اول ١" },
@@ -433,6 +648,8 @@
             { name: "مشاري محمد صالح القرني", class: "اول ١" },
             { name: "معاذ عبدالرحيم ضيف الله العطوي", class: "اول ١" },
             { name: "مقرن بن عبداللطيف بن محمد البلوي", class: "اول ١" },
+            
+            // أول ٢ (44 طالب)
             { name: "أحمد محمد سلامه العطوي", class: "اول ٢" },
             { name: "اسامه احمد عوده العطوي", class: "اول ٢" },
             { name: "الوليد سلمان علي العطوي", class: "اول ٢" },
@@ -478,6 +695,8 @@
             { name: "يزن نايف عياده البلوي", class: "اول ٢" },
             { name: "يزيد فيصل مصلح البلوي", class: "اول ٢" },
             { name: "يونس نور الدين حمود الحامدي", class: "اول ٢" },
+            
+            // ثاني ١ (44 طالب)
             { name: "أحمد عبدالرحمن احمد العطوي", class: "ثاني ١" },
             { name: "باسل فرج عياد البلوي", class: "ثاني ١" },
             { name: "بدر سعود عوده العطوي", class: "ثاني ١" },
@@ -518,6 +737,8 @@
             { name: "نايف يحيى مغدر الجابري", class: "ثاني ١" },
             { name: "نواف علي بن سلمان العطوي", class: "ثاني ١" },
             { name: "وليد عياد سويلم الحويطي", class: "ثاني ١" },
+            
+            // ثاني ٢ (48 طالب)
             { name: "اسامه لافي عوده العطوي", class: "ثاني ٢" },
             { name: "البراء محمد بن حسن الفيفي", class: "ثاني ٢" },
             { name: "الوليد طلال عبيدالله العنزي", class: "ثاني ٢" },
@@ -560,6 +781,8 @@
             { name: "يوسف انور محمد عبدالله", class: "ثاني ٢" },
             { name: "يوسف عيد صبحى العطوى", class: "ثاني ٢" },
             { name: "يوسف مسعد سلامه البلوي", class: "ثاني ٢" },
+            
+            // ثالث ١ (47 طالب)
             { name: "احمد عواد مسلم الحويطي", class: "ثالث ١" },
             { name: "أنس محمد عايد الحويطي", class: "ثالث ١" },
             { name: "اياد محمد سالم العطوي", class: "ثالث ١" },
@@ -592,6 +815,8 @@
             { name: "ياسر عايش سليمان العطوي", class: "ثالث ١" },
             { name: "يزن سعد ابن مشوح العنزي", class: "ثالث ١" },
             { name: "يزيد عبدالله عمر البلوي", class: "ثالث ١" },
+            
+            // ثالث ٢ (47 طالب)
             { name: "اسامه سالم حمود العطوي", class: "ثالث ٢" },
             { name: "اسامه صالح جازي البلوي", class: "ثالث ٢" },
             { name: "باسل فهد معوض العطوي", class: "ثالث ٢" },
@@ -622,6 +847,8 @@
             { name: "مروان عبدالعزيز سليم العطوي", class: "ثالث ٢" },
             { name: "نايف عوده عيد العطوي", class: "ثالث ٢" },
             { name: "ياسر محمد بن عوده العطوي", class: "ثالث ٢" },
+            
+            // ثالث ٣ (47 طالب)
             { name: "احمد وليد بركات بركات", class: "ثالث ٣" },
             { name: "جاسم عياد سويلم الحويطي", class: "ثالث ٣" },
             { name: "حاتم احمد سليمان الحويطي", class: "ثالث ٣" },
@@ -662,14 +889,15 @@
             return options;
         }
 
-        // ملء الجدول ببيانات الطلاب
-        function populateTable() {
+        // ملء الجدول الرئيسي ببيانات الطلاب
+        function populateMainTable() {
             const tbody = document.querySelector('#studentsTable tbody');
             tbody.innerHTML = '';
             
             studentsData.forEach((student, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
+                    <td>${index + 1}</td>
                     <td>${student.name}</td>
                     <td>${student.class}</td>
                     <td>
@@ -689,9 +917,50 @@
             
             // تحميل البيانات المحفوظة
             loadSavedData();
+        }
+
+        // ملء جداول الفصول
+        function populateClassTables() {
+            const classMapping = {
+                'class1': 'اول ١',
+                'class2': 'اول ٢', 
+                'class3': 'ثاني ١',
+                'class4': 'ثاني ٢',
+                'class5': 'ثالث ١',
+                'class6': 'ثالث ٢',
+                'class7': 'ثالث ٣'
+            };
             
-            // إضافة مستمعي الأحداث
-            addEventListeners();
+            Object.keys(classMapping).forEach(classKey => {
+                const className = classMapping[classKey];
+                const tbody = document.getElementById(`${classKey}-table`);
+                if (!tbody) return;
+                
+                tbody.innerHTML = '';
+                
+                const classStudents = studentsData.filter(student => student.class === className);
+                
+                classStudents.forEach((student, index) => {
+                    const globalIndex = studentsData.findIndex(s => s.name === student.name && s.class === student.class);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>
+                            <select class="written-eval class-${classKey}" data-index="${globalIndex}">
+                                ${generateOptions(60, 5)}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="performance-task class-${classKey}" data-index="${globalIndex}">
+                                ${generateOptions(40, 5)}
+                            </select>
+                        </td>
+                        <td class="total-cell" id="total-${globalIndex}">0</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
         }
 
         // تحديث المجموع والتمييز الشرطي
@@ -699,6 +968,9 @@
             const writtenEval = document.querySelector(`.written-eval[data-index="${index}"]`);
             const performanceTask = document.querySelector(`.performance-task[data-index="${index}"]`);
             const totalCell = document.getElementById(`total-${index}`);
+            
+            if (!writtenEval || !performanceTask || !totalCell) return;
+            
             const row = totalCell.closest('tr');
             
             const writtenValue = parseInt(writtenEval.value) || 0;
@@ -738,23 +1010,53 @@
             });
         }
 
+        // تعيين القيم للفصول
+        function setAllForClass(classKey, type, value) {
+            const selects = document.querySelectorAll(`.${type}.class-${classKey}`);
+            selects.forEach(select => {
+                select.value = value;
+                const index = select.getAttribute('data-index');
+                updateTotal(index);
+            });
+        }
+
         // إضافة مستمعي الأحداث
         function addEventListeners() {
-            // أحداث التبويبات
-            document.querySelectorAll('.tab').forEach(tab => {
+            // أحداث التبويبات الرئيسية
+            document.querySelectorAll('.main-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     // إزالة النشاط من جميع التبويبات
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     
                     // إضافة النشاط للتبويب المحدد
                     this.classList.add('active');
                     const tabId = this.getAttribute('data-tab');
                     document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // حفظ التبويب النشط
+                    localStorage.setItem('activeMainTab', tabId);
                 });
             });
 
-            // أحداث الجدول
+            // أحداث التبويبات الفرعية
+            document.querySelectorAll('.sub-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // إزالة النشاط من جميع التبويبات الفرعية
+                    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.class-content').forEach(c => c.classList.remove('active'));
+                    
+                    // إضافة النشاط للتبويب المحدد
+                    this.classList.add('active');
+                    const subtabId = this.getAttribute('data-subtab');
+                    document.getElementById(`${subtabId}-content`).classList.add('active');
+                    
+                    // حفظ التبويب الفرعي النشط
+                    localStorage.setItem('activeSubTab', subtabId);
+                });
+            });
+
+            // أحداث الجدول الرئيسي
             document.querySelectorAll('.written-eval, .performance-task').forEach(select => {
                 select.addEventListener('change', function() {
                     const index = this.getAttribute('data-index');
@@ -770,6 +1072,16 @@
             
             // زر الجميع 40
             document.getElementById('all40Btn').addEventListener('click', setAll40);
+            
+            // أزرار الفصول
+            document.querySelectorAll('.column-btn[data-class]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const classKey = this.getAttribute('data-class');
+                    const type = this.getAttribute('data-type');
+                    const value = type === 'written' ? '60' : '40';
+                    setAllForClass(classKey, type === 'written' ? 'written-eval' : 'performance-task', value);
+                });
+            });
             
             // إضافة فيديو يوتيوب
             document.getElementById('addVideoBtn').addEventListener('click', addYouTubeVideo);
@@ -833,7 +1145,7 @@
             videoElement.innerHTML = `
                 <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
                 <div class="video-title">${title}</div>
-                <button class="remove-video" data-id="${videoId}">إزالة الفيديو</button>
+                <button class="remove-video" data-id="${videoId}">🗑️ إزالة الفيديو</button>
             `;
             videosContainer.appendChild(videoElement);
             
@@ -930,7 +1242,7 @@
 
         // تصدير البيانات إلى CSV
         function exportToCSV() {
-            let csvContent = "اسم الطالب,الفصل,التقويمات التحريرية,المهام الأدائية والمشاركة,المجموع\n";
+            let csvContent = "الترقيم,اسم الطالب,الفصل,التقويمات التحريرية,المهام الأدائية والمشاركة,المجموع\n";
             
             studentsData.forEach((student, index) => {
                 const writtenEval = document.querySelector(`.written-eval[data-index="${index}"]`);
@@ -941,7 +1253,7 @@
                 const performanceValue = performanceTask ? performanceTask.value : 0;
                 const total = totalCell ? totalCell.textContent : 0;
                 
-                csvContent += `"${student.name}","${student.class}",${writtenValue},${performanceValue},${total}\n`;
+                csvContent += `${index + 1},"${student.name}","${student.class}",${writtenValue},${performanceValue},${total}\n`;
             });
             
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -957,24 +1269,28 @@
 
         // تهيئة الصفحة عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            populateTable();
+            populateMainTable();
+            populateClassTables();
             loadYouTubeVideos();
             
-            // تحميل التبويب النشط من التخزين المحلي
-            const activeTab = localStorage.getItem('activeTab') || 'kashf';
-            document.querySelectorAll('.tab').forEach(tab => {
-                if (tab.getAttribute('data-tab') === activeTab) {
+            // تحميل التبويب الرئيسي النشط
+            const activeMainTab = localStorage.getItem('activeMainTab') || 'kashf';
+            document.querySelectorAll('.main-tab').forEach(tab => {
+                if (tab.getAttribute('data-tab') === activeMainTab) {
                     tab.click();
                 }
             });
             
-            // حفظ التبويب النشط عند التغيير
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    localStorage.setItem('activeTab', tabId);
-                });
+            // تحميل التبويب الفرعي النشط
+            const activeSubTab = localStorage.getItem('activeSubTab') || 'class1';
+            document.querySelectorAll('.sub-tab').forEach(tab => {
+                if (tab.getAttribute('data-subtab') === activeSubTab) {
+                    tab.click();
+                }
             });
+            
+            // إضافة مستمعي الأحداث
+            addEventListeners();
         });
     </script>
 </body>
