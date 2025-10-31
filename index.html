@@ -130,15 +130,19 @@
         }
         
         /* تنسيقات التبويبات الفرعية */
+        .sub-tabs-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 20px;
+        }
+        
         .sub-tabs {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: var(--tab-gradient);
-            border-radius: 12px;
-            box-shadow: var(--tab-shadow);
+            flex: 1;
         }
         
         .sub-tab {
@@ -427,6 +431,11 @@
                 min-width: 120px;
                 text-align: center;
             }
+            
+            .sub-tabs-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
         }
         
         @media (max-width: 768px) {
@@ -474,63 +483,31 @@
 </head>
 <body>
     <div class="container">
-        <center>
-            <h1>🎓 تقييم الطلاب والمتابعة</h1>
-            <div class="buttons-container">
-                <button class="export-btn" id="exportBtn">📊 تصدير CSV</button>
-            </div>
+        <header>
+            <h1>🎓 نظام تقييم الطلاب المتكامل</h1>
         </header>
         
         <!-- التبويبات الرئيسية -->
         <div class="main-tabs">
-            <button class="main-tab active" data-tab="kashf">📋 الكشف العام</button>
-            <button class="main-tab" data-tab="classes">🏫 الفصول الدراسية</button>
+            <button class="main-tab active" data-tab="classes">🏫 الفصول الدراسية</button>
             <button class="main-tab" data-tab="books">📚 الكتب الدراسية</button>
             <button class="main-tab" data-tab="youtube">🎬 يوتيوب</button>
         </div>
         
-        <!-- محتوى تبويب الكشف العام -->
-        <div class="tab-content active" id="kashf-tab">
-            <table id="studentsTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>اسم الطالب</th>
-                        <th>الفصل</th>
-                        <th>
-                            <div class="column-header">
-                                <span>التقويمات التحريرية (60)</span>
-                                <button class="column-btn" id="all60Btn">الجميع ٦٠</button>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="column-header">
-                                <span>المهام الأدائية والمشاركة (40)</span>
-                                <button class="column-btn" id="all40Btn">الجميع ٤٠</button>
-                            </div>
-                        </th>
-                        <th>المجموع (100)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
-                </tbody>
-            </table>
-            
-            <div class="auto-save-notice">💾 سيتم حفظ جميع التغييرات تلقائياً</div>
-        </div>
-        
         <!-- محتوى تبويب الفصول الدراسية -->
-        <div class="tab-content" id="classes-tab">
-            <!-- التبويبات الفرعية للفصول -->
-            <div class="sub-tabs">
-                <button class="sub-tab active" data-subtab="class1">اول ١</button>
-                <button class="sub-tab" data-subtab="class2">اول ٢</button>
-                <button class="sub-tab" data-subtab="class3">ثاني ١</button>
-                <button class="sub-tab" data-subtab="class4">ثاني ٢</button>
-                <button class="sub-tab" data-subtab="class5">ثالث ١</button>
-                <button class="sub-tab" data-subtab="class6">ثالث ٢</button>
-                <button class="sub-tab" data-subtab="class7">ثالث ٣</button>
+        <div class="tab-content active" id="classes-tab">
+            <!-- التبويبات الفرعية للفصول مع زر التصدير -->
+            <div class="sub-tabs-container">
+                <div class="sub-tabs">
+                    <button class="sub-tab active" data-subtab="class1">اول ١</button>
+                    <button class="sub-tab" data-subtab="class2">اول ٢</button>
+                    <button class="sub-tab" data-subtab="class3">ثاني ١</button>
+                    <button class="sub-tab" data-subtab="class4">ثاني ٢</button>
+                    <button class="sub-tab" data-subtab="class5">ثالث ١</button>
+                    <button class="sub-tab" data-subtab="class6">ثالث ٢</button>
+                    <button class="sub-tab" data-subtab="class7">ثالث ٣</button>
+                </div>
+                <button class="export-btn" id="exportBtn">📊 تصدير CSV</button>
             </div>
             
             <!-- محتوى الفصول -->
@@ -722,6 +699,8 @@
                     </tbody>
                 </table>
             </div>
+            
+            <div class="auto-save-notice">💾 سيتم حفظ جميع التغييرات تلقائياً</div>
         </div>
         
         <!-- محتوى تبويب الكتب الدراسية -->
@@ -938,7 +917,7 @@
             { name: "ريان عواد عطاالله العطوي", class: "ثالث ١" },
             { name: "زياد محمد غازي العنزي", class: "ثالث ١" },
             { name: "سلامه احمد سلامه العطوي", class: "ثالث ١" },
-            { name: "سلطان عبدالمهدي عوده العطوي", class: "ثالث ١" },
+            { name: "سلطان عبدالمهدi عوده العطوي", class: "ثالث ١" },
             { name: "سلطان عبدالوالي مقبول الشراري", class: "ثالث ١" },
             { name: "سيف سعود ابن سالم العازمي", class: "ثالث ١" },
             { name: "طويرح عبدالله طويرح البلوي", class: "ثالث ١" },
@@ -998,7 +977,7 @@
             { name: "احمد وليد بركات بركات", class: "ثالث ٣" },
             { name: "جاسم عياد سويلم الحويطي", class: "ثالث ٣" },
             { name: "حاتم احمد سليمان الحويطي", class: "ثالث ٣" },
-            { name: "حسين محمد جابر دغريرi", class: "ثالث ٣" },
+            { name: "حسين محمد جابر دغريري", class: "ثالث ٣" },
             { name: "خالد محمد بن حمد البلوي", class: "ثالث ٣" },
             { name: "خالد محمد سلامه العطوي", class: "ثالث ٣" },
             { name: "ريان فوزي مخلد المطيري", class: "ثالث ٣" },
@@ -1033,36 +1012,6 @@
                 options += `<option value="${i}">${i}</option>`;
             }
             return options;
-        }
-
-        // ملء الجدول الرئيسي ببيانات الطلاب
-        function populateMainTable() {
-            const tbody = document.querySelector('#studentsTable tbody');
-            tbody.innerHTML = '';
-            
-            studentsData.forEach((student, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${student.name}</td>
-                    <td>${student.class}</td>
-                    <td>
-                        <select class="written-eval" data-index="${index}">
-                            ${generateOptions(60, 5)}
-                        </select>
-                    </td>
-                    <td>
-                        <select class="performance-task" data-index="${index}">
-                            ${generateOptions(40, 5)}
-                        </select>
-                    </td>
-                    <td class="total-cell" id="total-${index}">0</td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // تحميل البيانات المحفوظة
-            loadSavedData();
         }
 
         // ملء جداول الفصول
@@ -1107,6 +1056,9 @@
                     tbody.appendChild(row);
                 });
             });
+            
+            // تحميل البيانات المحفوظة
+            loadSavedData();
         }
 
         // تحديث المجموع والتمييز الشرطي
@@ -1136,24 +1088,6 @@
             
             // حفظ البيانات
             saveData();
-        }
-
-        // تعيين 60 درجة للجميع في التقويمات التحريرية
-        function setAll60() {
-            document.querySelectorAll('.written-eval').forEach(select => {
-                select.value = '60';
-                const index = select.getAttribute('data-index');
-                updateTotal(index);
-            });
-        }
-
-        // تعيين 40 درجة للجميع في المهام الأدائية
-        function setAll40() {
-            document.querySelectorAll('.performance-task').forEach(select => {
-                select.value = '40';
-                const index = select.getAttribute('data-index');
-                updateTotal(index);
-            });
         }
 
         // تعيين القيم للفصول
@@ -1202,7 +1136,7 @@
                 });
             });
 
-            // أحداث الجدول الرئيسي
+            // أحداث الجدول
             document.querySelectorAll('.written-eval, .performance-task').forEach(select => {
                 select.addEventListener('change', function() {
                     const index = this.getAttribute('data-index');
@@ -1212,12 +1146,6 @@
             
             // زر التصدير
             document.getElementById('exportBtn').addEventListener('click', exportToCSV);
-            
-            // زر الجميع 60
-            document.getElementById('all60Btn').addEventListener('click', setAll60);
-            
-            // زر الجميع 40
-            document.getElementById('all40Btn').addEventListener('click', setAll40);
             
             // أزرار الفصول
             document.querySelectorAll('.class-all-btn').forEach(btn => {
@@ -1415,12 +1343,11 @@
 
         // تهيئة الصفحة عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            populateMainTable();
             populateClassTables();
             loadYouTubeVideos();
             
             // تحميل التبويب الرئيسي النشط
-            const activeMainTab = localStorage.getItem('activeMainTab') || 'kashf';
+            const activeMainTab = localStorage.getItem('activeMainTab') || 'classes';
             document.querySelectorAll('.main-tab').forEach(tab => {
                 if (tab.getAttribute('data-tab') === activeMainTab) {
                     tab.click();
@@ -1441,6 +1368,3 @@
     </script>
 </body>
 </html>
-
-
-
