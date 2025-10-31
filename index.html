@@ -173,6 +173,14 @@
             display: block;
         }
         
+        .class-content {
+            display: none;
+        }
+        
+        .class-content.active {
+            display: block;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -535,13 +543,13 @@
                             <th>
                                 <div class="column-header">
                                     <span>التقويمات التحريرية (60)</span>
-                                    <button class="column-btn" data-class="class1" data-type="written">الجميع ٦٠</button>
+                                    <button class="column-btn class-all-btn" data-class="class1" data-type="written">الجميع ٦٠</button>
                                 </div>
                             </th>
                             <th>
                                 <div class="column-header">
                                     <span>المهام الأدائية والمشاركة (40)</span>
-                                    <button class="column-btn" data-class="class1" data-type="performance">الجميع ٤٠</button>
+                                    <button class="column-btn class-all-btn" data-class="class1" data-type="performance">الجميع ٤٠</button>
                                 </div>
                             </th>
                             <th>المجموع (100)</th>
@@ -554,27 +562,165 @@
             </div>
             
             <div class="class-content" id="class2-content">
-                <!-- نفس هيكل class1-content -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الطالب</th>
+                            <th>
+                                <div class="column-header">
+                                    <span>التقويمات التحريرية (60)</span>
+                                    <button class="column-btn class-all-btn" data-class="class2" data-type="written">الجميع ٦٠</button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="column-header">
+                                    <span>المهام الأدائية والمشاركة (40)</span>
+                                    <button class="column-btn class-all-btn" data-class="class2" data-type="performance">الجميع ٤٠</button>
+                                </div>
+                            </th>
+                            <th>المجموع (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class2-table">
+                        <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                    </tbody>
+                </table>
             </div>
             
             <div class="class-content" id="class3-content">
-                <!-- نفس هيكل class1-content -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الطالب</th>
+                            <th>
+                                <div class="column-header">
+                                    <span>التقويمات التحريرية (60)</span>
+                                    <button class="column-btn class-all-btn" data-class="class3" data-type="written">الجميع ٦٠</button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="column-header">
+                                    <span>المهام الأدائية والمشاركة (40)</span>
+                                    <button class="column-btn class-all-btn" data-class="class3" data-type="performance">الجميع ٤٠</button>
+                                </div>
+                            </th>
+                            <th>المجموع (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class3-table">
+                        <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                    </tbody>
+                </table>
             </div>
             
             <div class="class-content" id="class4-content">
-                <!-- نفس هيكل class1-content -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الطالب</th>
+                            <th>
+                                <div class="column-header">
+                                    <span>التقويمات التحريرية (60)</span>
+                                    <button class="column-btn class-all-btn" data-class="class4" data-type="written">الجميع ٦٠</button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="column-header">
+                                    <span>المهام الأدائية والمشاركة (40)</span>
+                                    <button class="column-btn class-all-btn" data-class="class4" data-type="performance">الجميع ٤٠</button>
+                                </div>
+                            </th>
+                            <th>المجموع (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class4-table">
+                        <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                    </tbody>
+                </table>
             </div>
             
             <div class="class-content" id="class5-content">
-                <!-- نفس هيكل class1-content -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الطالب</th>
+                            <th>
+                                <div class="column-header">
+                                    <span>التقويمات التحريرية (60)</span>
+                                    <button class="column-btn class-all-btn" data-class="class5" data-type="written">الجميع ٦٠</button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="column-header">
+                                    <span>المهام الأدائية والمشاركة (40)</span>
+                                    <button class="column-btn class-all-btn" data-class="class5" data-type="performance">الجميع ٤٠</button>
+                                </div>
+                            </th>
+                            <th>المجموع (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class5-table">
+                        <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                    </tbody>
+                </table>
             </div>
             
             <div class="class-content" id="class6-content">
-                <!-- نفس هيكل class1-content -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الطالب</th>
+                            <th>
+                                <div class="column-header">
+                                    <span>التقويمات التحريرية (60)</span>
+                                    <button class="column-btn class-all-btn" data-class="class6" data-type="written">الجميع ٦٠</button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="column-header">
+                                    <span>المهام الأدائية والمشاركة (40)</span>
+                                    <button class="column-btn class-all-btn" data-class="class6" data-type="performance">الجميع ٤٠</button>
+                                </div>
+                            </th>
+                            <th>المجموع (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class6-table">
+                        <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                    </tbody>
+                </table>
             </div>
             
             <div class="class-content" id="class7-content">
-                <!-- نفس هيكل class1-content -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الطالب</th>
+                            <th>
+                                <div class="column-header">
+                                    <span>التقويمات التحريرية (60)</span>
+                                    <button class="column-btn class-all-btn" data-class="class7" data-type="written">الجميع ٦٠</button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="column-header">
+                                    <span>المهام الأدائية والمشاركة (40)</span>
+                                    <button class="column-btn class-all-btn" data-class="class7" data-type="performance">الجميع ٤٠</button>
+                                </div>
+                            </th>
+                            <th>المجموع (100)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="class7-table">
+                        <!-- سيتم ملء الجدول تلقائياً باستخدام JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
         
@@ -852,7 +998,7 @@
             { name: "احمد وليد بركات بركات", class: "ثالث ٣" },
             { name: "جاسم عياد سويلم الحويطي", class: "ثالث ٣" },
             { name: "حاتم احمد سليمان الحويطي", class: "ثالث ٣" },
-            { name: "حسين محمد جابر دغريري", class: "ثالث ٣" },
+            { name: "حسين محمد جابر دغريرi", class: "ثالث ٣" },
             { name: "خالد محمد بن حمد البلوي", class: "ثالث ٣" },
             { name: "خالد محمد سلامه العطوي", class: "ثالث ٣" },
             { name: "ريان فوزي مخلد المطيري", class: "ثالث ٣" },
@@ -1074,7 +1220,7 @@
             document.getElementById('all40Btn').addEventListener('click', setAll40);
             
             // أزرار الفصول
-            document.querySelectorAll('.column-btn[data-class]').forEach(btn => {
+            document.querySelectorAll('.class-all-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const classKey = this.getAttribute('data-class');
                     const type = this.getAttribute('data-type');
