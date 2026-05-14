@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>مدير المجموعات والدرجات - نظام التبويبات</title>
+    <title>نظام المجموعات - إضافة درجة للجميع تلقائياً + نتائج بالدرجة الواحدة</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,6 @@
             align-items: center;
         }
 
-        /* الحاوية الرئيسية */
         .dashboard {
             max-width: 1500px;
             width: 100%;
@@ -32,7 +31,6 @@
             box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
         }
 
-        /* تبويبات */
         .tabs {
             display: flex;
             flex-wrap: wrap;
@@ -69,7 +67,6 @@
             box-shadow: 0 4px 0 #7f96b0;
         }
 
-        /* محتوى التبويبات */
         .tab-content {
             display: none;
             animation: fadeIn 0.25s ease;
@@ -84,7 +81,6 @@
             to { opacity: 1; transform: translateY(0);}
         }
 
-        /* تخطيط الجدولين جنباً إلى جنب */
         .tables-row {
             display: flex;
             flex-wrap: wrap;
@@ -111,7 +107,6 @@
             margin-bottom: 20px;
         }
 
-        /* الجداول */
         .students-table, .grade-table {
             width: 100%;
             border-collapse: collapse;
@@ -139,7 +134,6 @@
             border-bottom: none;
         }
 
-        /* قائمة منسدلة داخل الجدول */
         .student-select {
             width: 100%;
             padding: 8px 6px;
@@ -158,7 +152,6 @@
             font-size: 1rem;
         }
 
-        /* أزرار ثلاثية الأبعاد */
         .btn-3d {
             background: #2b6e4f;
             border: none;
@@ -193,12 +186,11 @@
             width: 100%;
         }
 
-        .add-grade-all {
-            background: #3c8f6e;
-            box-shadow: 0 6px 0 #235b44;
-            margin-top: 20px;
-            width: auto;
-            padding: 12px 30px;
+        .delete-student-btn {
+            background: #c7452c;
+            box-shadow: 0 5px 0 #832614;
+            padding: 6px 12px;
+            font-size: 0.8rem;
         }
 
         .group-actions {
@@ -207,7 +199,6 @@
             margin-top: 10px;
         }
 
-        /* نموذج اضافة اسم */
         .add-name-form {
             display: flex;
             gap: 12px;
@@ -227,7 +218,6 @@
             font-size: 1rem;
         }
 
-        /* تبويب النتائج */
         .results-container {
             background: #fef9ef;
             border-radius: 48px;
@@ -262,11 +252,6 @@
             color: #1b5e3f;
         }
 
-        hr {
-            margin: 16px 0;
-        }
-
-        /* رسوم متجاوبة */
         @media (max-width: 850px) {
             .tables-row {
                 flex-direction: column;
@@ -290,39 +275,23 @@
 <body>
 
 <div class="dashboard">
-    <!-- تبويبات رئيسية: 7 مجموعات + النتائج -->
     <div class="tabs" id="tabsContainer"></div>
-
-    <!-- محتويات التبويبات السبعة -->
     <div id="groupsContainer"></div>
-
-    <!-- تبويب النتائج (سيتم عرضه عند الضغط) -->
-    <div id="resultsTabContent" class="tab-content"></div>
+    <div id="resultsTabContent"></div>
 </div>
 
 <script>
-    // ------------------- أسماء المجموعات -------------------
     const GROUP_NAMES = [
-        "المجموعة الاولى",
-        "المجموعة الثانية",
-        "المجموعة الثالثة",
-        "المجموعة الرابعة",
-        "المجموعة الخامسة",
-        "المجموعة السادسة",
-        "المجموعة السابعة"
+        "المجموعة الاولى", "المجموعة الثانية", "المجموعة الثالثة",
+        "المجموعة الرابعة", "المجموعة الخامسة", "المجموعة السادسة", "المجموعة السابعة"
     ];
     const TOTAL_GROUPS = 7;
+    const STORAGE_KEY = "TeacherGroupsSystemV2";
 
-    // هيكل البيانات: لكل مجموعة قائمة طلاب [{ id, name, grade }]
-    // grade: رقم (قد يكون null أو الرقم المضاف)
-    // ونسخة احتياطية من الدرجات الفردية حسب ما يضيفه المعلم لكل طالب على حدة (نفس grade)
-    // لكن لسهولة، سنخزن مباشرة في الطالب حقل grade (يبدأ null ثم يحدد بالدرجة اليدوية او اضافة للجميع)
-    let groupsData = [];
+    let groupsData = [];      // كل عنصر: { groupIndex, students, currentGroupGrade (الدرجة الحالية للمجموعة) }
+    let currentActiveTab = 0;
 
-    // مفتاح التخزين المحلي
-    const STORAGE_KEY = "TeacherGroupsSystemV1";
-
-    // تهيئة البيانات أو تحميل من localStorage
+    // === التهيئة و التخزين ===
     function loadData() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -334,20 +303,21 @@
                 }
             } catch(e) {}
         }
-        // بيانات افتراضية (فارغة)
         groupsData = [];
         for (let i = 0; i < TOTAL_GROUPS; i++) {
             groupsData.push({
                 groupIndex: i,
-                students: []     // كل طالب: { id, name, grade }
+                students: [],            // { id, name }
+                currentGroupGrade: null  // الدرجة المشتركة لجميع طلاب المجموعة (تضاف للجميع)
             });
         }
-        // إضافة بعض الطلاب تجريبيين للتوضيح (اختياري ليسهل رؤية الشكل)
+        // بيانات توضيحية أولية
         if(!saved){
-            // نموذج مجموعة 0
-            groupsData[0].students.push({ id: Date.now()+1, name: "محمد احمد", grade: null });
-            groupsData[0].students.push({ id: Date.now()+2, name: "خالد علي", grade: null });
-            groupsData[1].students.push({ id: Date.now()+3, name: "سارة يوسف", grade: null });
+            groupsData[0].students.push({ id: Date.now()+1, name: "محمد احمد" });
+            groupsData[0].students.push({ id: Date.now()+2, name: "خالد علي" });
+            groupsData[1].students.push({ id: Date.now()+3, name: "سارة يوسف" });
+            groupsData[0].currentGroupGrade = null;
+            groupsData[1].currentGroupGrade = null;
         }
         saveToLocal();
     }
@@ -356,79 +326,67 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(groupsData));
     }
 
-    // إضافة طالب لمجموعة معينة
+    // إضافة طالب
     function addStudentToGroup(groupIdx, studentName) {
         if (!studentName || studentName.trim() === "") return false;
-        const newName = studentName.trim();
         const newId = Date.now() + Math.random() * 10000;
         groupsData[groupIdx].students.push({
             id: newId,
-            name: newName,
-            grade: null
+            name: studentName.trim()
         });
+        // ملاحظة: لا نغير الدرجة الحالية للمجموعة, تبقى كما هي (لا تؤثر على الطلاب الجدد)
         saveToLocal();
-        renderAllTabsContent();     // تحديث المحتوى بالكامل مع الحفاظ على التبويب النشط
+        renderAllTabsContent();
         return true;
     }
 
-    // إضافة درجة لطالب معين في مجموعة (يدوياً عبر الجدول الثاني)
-    function assignGradeToStudent(groupIdx, studentId, gradeValue) {
-        const students = groupsData[groupIdx].students;
-        const student = students.find(s => s.id == studentId);
-        if (student) {
-            let numericGrade = parseFloat(gradeValue);
-            if (isNaN(numericGrade)) numericGrade = null;
-            else numericGrade = Math.min(100, Math.max(0, numericGrade)); // نطاق 0-100
-            student.grade = numericGrade;
-            saveToLocal();
-            renderAllTabsContent();
-        }
-    }
-
-    // اضافة درجة للجميع في مجموعة معينة (كل الطلاب المضافين في هذا التبويب)
-    function addGradeToAllInGroup(groupIdx, gradeValue) {
-        let numericGrade = parseFloat(gradeValue);
-        if (isNaN(numericGrade)) numericGrade = null;
-        else numericGrade = Math.min(100, Math.max(0, numericGrade));
-        const students = groupsData[groupIdx].students;
-        if (students.length === 0) return;
-        for (let student of students) {
-            student.grade = numericGrade;
+    // حذف طالب
+    function deleteStudentFromGroup(groupIdx, studentId) {
+        const group = groupsData[groupIdx];
+        const newStudents = group.students.filter(s => s.id != studentId);
+        group.students = newStudents;
+        // إذا لم يبق أي طالب, يمكننا إعادة الدرجة إلى null أو ابقائها (اختياري)
+        if (newStudents.length === 0) {
+            group.currentGroupGrade = null;
         }
         saveToLocal();
         renderAllTabsContent();
     }
 
-    // حساب مجموع الدرجات للمجموعة (مجموع الدرجات الفعلية، تجاهل null)
-    function getTotalScoreForGroup(groupIdx) {
-        const students = groupsData[groupIdx].students;
-        let total = 0;
-        for (let s of students) {
-            if (s.grade !== null && !isNaN(s.grade)) {
-                total += s.grade;
-            }
-        }
-        return total;
+    // إضافة درجة للجميع (الدرجة تضاف لجميع الطلاب الحاليين والمستقبليين? بل المطلوب: اضافه درجة يتم اضافتها للجميع بنفس التبويب)
+    // هنا نستخدم مفهوم: currentGroupGrade : هي الدرجة المضافة حالياً لكل طالب في المجموعة.
+    function setGradeForAllInGroup(groupIdx, gradeValue) {
+        let numericGrade = parseFloat(gradeValue);
+        if (isNaN(numericGrade)) numericGrade = null;
+        else numericGrade = Math.min(100, Math.max(0, numericGrade));
+        const group = groupsData[groupIdx];
+        group.currentGroupGrade = numericGrade;
+        saveToLocal();
+        renderAllTabsContent();
     }
 
-    // ============= بناء التبويبات والجداول ديناميكيا =============
-    let currentActiveTab = 0;   // 0..6 للمجموعات, 7 للنتائج
+    // حساب مجموع الدرجات للمجموعة حسب المنطق الجديد : مجموع الدرجات = الدرجة المضافه للجميع (مرة واحدة) وليس مجموع الدرجات لكل الطلاب.
+    // بمعنى: إذا كانت المجموعة لديها currentGroupGrade = 7, فالنتيجة تكون 7 بغض النظر عن عدد الطلاب.
+    function getTotalScoreForGroup(groupIdx) {
+        const grade = groupsData[groupIdx].currentGroupGrade;
+        if (grade !== null && !isNaN(grade)) {
+            return grade;
+        }
+        return 0;
+    }
 
+    // بناء التبويبات
     function renderTabs() {
         const tabsContainer = document.getElementById("tabsContainer");
         tabsContainer.innerHTML = "";
-        // تبويبات المجموعات
         for (let i = 0; i < TOTAL_GROUPS; i++) {
             const btn = document.createElement("button");
             btn.className = "tab-btn";
             if (currentActiveTab === i) btn.classList.add("active");
             btn.textContent = GROUP_NAMES[i];
-            btn.addEventListener("click", (function(idx) {
-                return function() { switchToTab(idx); };
-            })(i));
+            btn.addEventListener("click", (function(idx) { return function() { switchToTab(idx); }; })(i));
             tabsContainer.appendChild(btn);
         }
-        // تبويب النتائج
         const resultsBtn = document.createElement("button");
         resultsBtn.className = "tab-btn";
         if (currentActiveTab === TOTAL_GROUPS) resultsBtn.classList.add("active");
@@ -437,16 +395,13 @@
         tabsContainer.appendChild(resultsBtn);
     }
 
-    // تبديل التبويب
     function switchToTab(tabIndex) {
         currentActiveTab = tabIndex;
         renderTabs();
-        // اخفاء كل المحتويات
         const groupsContainer = document.getElementById("groupsContainer");
         const resultsContainer = document.getElementById("resultsTabContent");
         groupsContainer.style.display = (tabIndex < TOTAL_GROUPS) ? "block" : "none";
         resultsContainer.style.display = (tabIndex === TOTAL_GROUPS) ? "block" : "none";
-
         if (tabIndex < TOTAL_GROUPS) {
             renderGroupTabContent(tabIndex);
         } else {
@@ -454,33 +409,30 @@
         }
     }
 
-    // عرض محتوى تبويب مجموعة معينة (الجدولين جنباً إلى جنب)
+    // عرض تبويب مجموعة معينة
     function renderGroupTabContent(groupIdx) {
         const container = document.getElementById("groupsContainer");
         container.innerHTML = ""; 
         const group = groupsData[groupIdx];
-        const students = group.students;
+        const students = group.students || [];
+        const currentGradeForAll = group.currentGroupGrade;  // الدرجة الموحدة للمجموعة
 
-        // حاوية رئيسية
         const wrapper = document.createElement("div");
         wrapper.className = "active-tab";
 
-        // نموذج اضافة اسم
+        // نموذج إضافة طالب
         const addForm = document.createElement("div");
         addForm.className = "add-name-form";
         const nameInput = document.createElement("input");
         nameInput.type = "text";
-        nameInput.placeholder = "اسم الطالب ...";
+        nameInput.placeholder = "اسم الطالب الجديد ...";
         nameInput.dir = "rtl";
         const addBtn = document.createElement("button");
         addBtn.textContent = "+ إضافة اسم";
         addBtn.className = "btn-3d add-student-btn";
         addBtn.addEventListener("click", () => {
             const val = nameInput.value.trim();
-            if (val === "") {
-                alert("الرجاء إدخال اسم الطالب");
-                return;
-            }
+            if (val === "") { alert("الرجاء إدخال اسم الطالب"); return; }
             addStudentToGroup(groupIdx, val);
             nameInput.value = "";
         });
@@ -488,49 +440,60 @@
         addForm.appendChild(addBtn);
         wrapper.appendChild(addForm);
 
-        // القسم الرئيسي: جدولين جنباً
+        // القسم: جدولين جنباً إلى جنب
         const tablesRow = document.createElement("div");
         tablesRow.className = "tables-row";
 
-        // الجدول الأول: قائمة الطلاب والدرجات
+        // الجدول الأيمن: عرض الطلاب مع الدرجة الحالية + زر حذف لكل طالب
         const leftCard = document.createElement("div");
         leftCard.className = "card-table";
         leftCard.innerHTML = `<h3>📋 قائمة الطلاب والدرجات</h3>`;
         const studentTable = document.createElement("table");
         studentTable.className = "students-table";
-        let thead = `<thead><tr><th>#</th><th>اسم الطالب</th><th>الدرجة 🟢</th></tr></thead><tbody>`;
+        let thead = `<thead><tr><th>#</th><th>اسم الطالب</th><th>الدرجة الحالية 🟢</th><th>حذف</th></tr></thead><tbody>`;
         let tbody = "";
         if (students.length === 0) {
-            tbody = `<tr><td colspan="3" style="text-align:center;">لا يوجد طلاب، أضف طلاباً أولاً</td></tr>`;
+            tbody = `<tr><td colspan="4" style="text-align:center;">⚠️ لا يوجد طلاب، أضف طلاباً</td></tr>`;
         } else {
             students.forEach((stu, idx) => {
-                const displayGrade = (stu.grade !== null && !isNaN(stu.grade)) ? stu.grade : "—";
-                tbody += `<tr>
-                    <td>${idx+1}</td>
-                    <td>${escapeHtml(stu.name)}</td>
-                    <td>${displayGrade}</td>
-                </tr>`;
+                const displayGrade = (currentGradeForAll !== null && !isNaN(currentGradeForAll)) ? currentGradeForAll : "—";
+                tbody += `
+                    <tr>
+                        <td>${idx+1}</td>
+                        <td>${escapeHtml(stu.name)}</td>
+                        <td>${displayGrade}</td>
+                        <td><button class="btn-3d delete-student-btn" data-id="${stu.id}" style="padding: 4px 16px;">🗑 حذف</button></td>
+                    </tr>
+                `;
             });
         }
         studentTable.innerHTML = thead + tbody + `</tbody>`;
         leftCard.appendChild(studentTable);
+
+        // ربط أحداث الحذف بعد التصيير
+        setTimeout(() => {
+            const deleteBtns = leftCard.querySelectorAll(".delete-student-btn");
+            deleteBtns.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const studentId = parseInt(btn.getAttribute("data-id"));
+                    deleteStudentFromGroup(groupIdx, studentId);
+                });
+            });
+        }, 10);
+
         tablesRow.appendChild(leftCard);
 
-        // الجدول الثاني: قائمة منسدلة للطلاب + عمود الدرجة اليدوي
+        // الجدول الثاني: قائمة منسدلة للطلاب + حقل درجة + زر تعيين (يضيف الدرجة للجميع في هذه المجموعة)
         const rightCard = document.createElement("div");
         rightCard.className = "card-table";
-        rightCard.innerHTML = `<h3>✏️ إضافة/تعديل درجة لطالب</h3>`;
+        rightCard.innerHTML = `<h3>✏️ إضافة درجة للجميع</h3>
+                               <p class="small-note" style="margin-bottom:12px;">⚠️ ملاحظة: أي درجة تُضاف هنا تُطبق على جميع طلاب هذه المجموعة فوراً.</p>`;
         const gradeAssignTable = document.createElement("table");
         gradeAssignTable.className = "grade-table";
         gradeAssignTable.innerHTML = `
-            <thead><tr><th>اختر الطالب</th><th>الدرجة (0-100)</th><th></th></tr></thead>
-            <tbody id="gradeAssignBody-${groupIdx}"></tbody>
+            <thead><tr><th>اختر الطالب (للتأكيد فقط)</th><th>الدرجة الجديدة (0-100)</th><th></th></tr></thead>
+            <tbody id="gradeAssignBody"></tbody>
         `;
-        rightCard.appendChild(gradeAssignTable);
-        
-        // حاوية الصفوف ديناميكية (يمكن أن يكون هناك عدة إجراءات لكننا نعرض صفاً واحداً لإضافة درجة لطالب محدد؟ بناء على الصورة المرفقة: يوجد جدول به عمود اختيار الطالب وعمود درجة وزر إضافة درجة)
-        // حسب الوصف: "جدول يحتوي على عمودين فقط: عمود لاختيار الطالب المضاف (قائمة منسدلة) وعمود بالدرجة يضيفها المعلم يدويا" 
-        // نوفر صفاً واحداً يتضمن اختيار الطالب وحقل الدرجة وزر "تعيين الدرجة"
         const tbodyAssign = document.createElement("tbody");
         const row = document.createElement("tr");
         
@@ -556,25 +519,34 @@
         const gradeCell = document.createElement("td");
         const gradeInput = document.createElement("input");
         gradeInput.type = "number";
-        gradeInput.placeholder = "الدرجة";
+        gradeInput.placeholder = "الدرجة للجميع";
         gradeInput.className = "grade-input";
         gradeInput.step = "0.5";
         gradeInput.min = "0";
         gradeInput.max = "100";
+        // إذا كانت هناك درجة حالية للمجموعة نعرضها في الحقل كنقطة بداية
+        if(currentGradeForAll !== null && !isNaN(currentGradeForAll)) {
+            gradeInput.value = currentGradeForAll;
+        }
         gradeCell.appendChild(gradeInput);
         
         const actionCell = document.createElement("td");
         const assignBtn = document.createElement("button");
-        assignBtn.textContent = "تعيين";
+        assignBtn.textContent = "📌 تطبيق الدرجة على الجميع";
         assignBtn.className = "btn-3d assign-btn";
-        assignBtn.style.padding = "6px 18px";
+        assignBtn.style.padding = "8px 16px";
         assignBtn.addEventListener("click", () => {
-            const selectedId = selectEl.value;
-            if (!selectedId || students.length === 0) return alert("لا يوجد طلاب");
+            if (students.length === 0) {
+                alert("لا يوجد طلاب في هذه المجموعة، أضف طلاباً أولاً.");
+                return;
+            }
             const rawGrade = gradeInput.value;
-            if (rawGrade === "") return alert("أدخل درجة");
-            assignGradeToStudent(groupIdx, selectedId, rawGrade);
-            gradeInput.value = "";
+            if (rawGrade === "") {
+                alert("أدخل درجة ليتم تطبيقها على جميع الطلاب في المجموعة");
+                return;
+            }
+            setGradeForAllInGroup(groupIdx, rawGrade);
+            gradeInput.value = rawGrade; // يُحدد بعد التطبيق
         });
         actionCell.appendChild(assignBtn);
         
@@ -583,57 +555,30 @@
         row.appendChild(actionCell);
         tbodyAssign.appendChild(row);
         gradeAssignTable.appendChild(tbodyAssign);
-        
-        // إضافة جدول الدرجة كامل
         rightCard.appendChild(gradeAssignTable);
+        
         tablesRow.appendChild(rightCard);
         wrapper.appendChild(tablesRow);
-        
-        // زر اضافة درجة للجميع (أسفل الجدولين كما هو مطلوب)
-        const allGradeDiv = document.createElement("div");
-        allGradeDiv.className = "group-actions";
-        const allGradeInput = document.createElement("input");
-        allGradeInput.type = "number";
-        allGradeInput.placeholder = "الدرجة للجميع (0-100)";
-        allGradeInput.style.padding = "10px 14px";
-        allGradeInput.style.borderRadius = "60px";
-        allGradeInput.style.border = "1px solid #ccc";
-        allGradeInput.style.marginLeft = "12px";
-        allGradeInput.style.width = "160px";
-        const allBtn = document.createElement("button");
-        allBtn.textContent = "➕ إضافة درجة للجميع";
-        allBtn.className = "btn-3d add-grade-all";
-        allBtn.addEventListener("click", () => {
-            const gradeVal = allGradeInput.value;
-            if (gradeVal === "") {
-                alert("أدخل درجة لإضافتها لجميع الطلاب في هذه المجموعة");
-                return;
-            }
-            addGradeToAllInGroup(groupIdx, gradeVal);
-            allGradeInput.value = "";
-        });
-        allGradeDiv.appendChild(allGradeInput);
-        allGradeDiv.appendChild(allBtn);
-        wrapper.appendChild(allGradeDiv);
         
         container.appendChild(wrapper);
     }
 
-    // عرض تبويب النتائج: المجموعات السبعة مع مجموع الدرجات
+    // تبويب النتائج: يعرض المجموعات ومجموع الدرجات (مرة واحدة لكل مجموعة = currentGroupGrade)
     function renderResultsTab() {
         const resultsDiv = document.getElementById("resultsTabContent");
         resultsDiv.innerHTML = "";
         const container = document.createElement("div");
         container.className = "results-container";
-        container.innerHTML = `<h2 style="color:#1f4e6e; margin-bottom:24px;">📊 ملخص النتائج حسب المجموعة</h2>`;
-        
+        container.innerHTML = `<h2 style="color:#1f4e6e; margin-bottom:24px;">📊 ملخص النتائج (مجموع الدرجات لكل مجموعة)</h2>
+                               <p style="margin-bottom:20px; background:#f0f3f8; padding:8px 16px; border-radius: 60px;">⭐ نظام الدرجات: الدرجة المضافة توزع على جميع الطلاب، ويُحتسب مجموع الدرجات = الدرجة المضافة (مرة واحدة) لكل مجموعة.</p>`;
         for (let i = 0; i < TOTAL_GROUPS; i++) {
             const totalScore = getTotalScoreForGroup(i);
+            const gradeDisplay = (totalScore !== null && !isNaN(totalScore)) ? totalScore : "0";
             const groupDiv = document.createElement("div");
             groupDiv.className = "group-result";
             groupDiv.innerHTML = `
                 <span class="group-name">${GROUP_NAMES[i]}</span>
-                <span class="total-score">المجموع: ${totalScore}  نقطة</span>
+                <span class="total-score">المجموع: ${gradeDisplay}  نقطة</span>
             `;
             container.appendChild(groupDiv);
         }
@@ -641,12 +586,11 @@
         footerNote.className = "small-note";
         footerNote.style.marginTop = "24px";
         footerNote.style.textAlign = "center";
-        footerNote.innerText = "✅ يتم الحفظ التلقائي لكل التعديلات (إضافة طلاب، درجات) تلقائياً.";
+        footerNote.innerText = "✅ حفظ تلقائي: جميع التعديلات (إضافة طلاب، حذف، إضافة درجات) محفوظة تلقائياً.";
         container.appendChild(footerNote);
         resultsDiv.appendChild(container);
     }
 
-    // إعادة عرض جميع المحتويات بناءً على currentActiveTab
     function renderAllTabsContent() {
         renderTabs();
         const groupsContainer = document.getElementById("groupsContainer");
@@ -662,7 +606,6 @@
         }
     }
 
-    // مساعد html escaping بسيط
     function escapeHtml(str) {
         if (!str) return "";
         return str.replace(/[&<>]/g, function(m) {
@@ -670,15 +613,11 @@
             if(m === '<') return '&lt;';
             if(m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
         });
     }
 
-    // تهيئة الصفحة بالكامل
     function init() {
         loadData();
-        // إنشاء حاويات ديناميكية
         const groupsContainerDiv = document.createElement("div");
         groupsContainerDiv.id = "groupsContainer";
         groupsContainerDiv.style.display = "block";
@@ -688,15 +627,11 @@
         document.querySelector(".dashboard").appendChild(groupsContainerDiv);
         document.querySelector(".dashboard").appendChild(resultsDiv);
         
-        // ضبط التبويب الافتراضي (المجموعة الاولى)
         currentActiveTab = 0;
         renderTabs();
-        // عرض المحتوى الأول
         groupsContainerDiv.style.display = "block";
         resultsDiv.style.display = "none";
         renderGroupTabContent(0);
-        
-        // إضافة مستمع للأحداث لا حاجة، كل شيء يعاد رسمه
     }
     
     init();
