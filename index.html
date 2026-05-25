@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>نظام المجموعات المتقدم - سحب عشوائي بدون تكرار</title>
+    <title>نظام المجموعات المتقدم - النسخ والنقل والشعارات</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -13,13 +13,11 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', 'Tajawal', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
             padding: 25px;
             min-height: 100vh;
         }
-
         .app-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -27,10 +25,7 @@
             border-radius: 44px;
             box-shadow: 0 30px 55px -15px rgba(0,0,0,0.3);
             overflow: hidden;
-            backdrop-filter: blur(2px);
         }
-
-        /* التبويبات */
         .tabs-nav {
             display: flex;
             flex-wrap: wrap;
@@ -38,7 +33,6 @@
             gap: 8px;
             padding: 14px 28px 0 28px;
         }
-
         .tab-btn {
             background: transparent;
             border: none;
@@ -50,40 +44,17 @@
             border-radius: 36px 36px 0 0;
             transition: all 0.25s;
         }
-
-        .tab-btn i {
-            margin-left: 10px;
-        }
-
+        .tab-btn i { margin-left: 10px; }
         .tab-btn.active {
             background: white;
             color: #0f172a;
             border-bottom: 4px solid #f97316;
-            box-shadow: 0 -6px 12px rgba(0,0,0,0.03);
         }
-
-        .tab-content {
-            display: none;
-            padding: 32px;
-            background: #ffffff;
-            animation: fadeSlide 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(12px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-
-        /* الأسابيع */
-        .weeks-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
+        .tab-content { display: none; padding: 32px; background: #ffffff; animation: fadeSlide 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(12px);} to { opacity: 1; transform: translateY(0);} }
+        
+        .weeks-grid { display: flex; flex-direction: column; gap: 14px; }
         .week-item {
             background: #f8fafc;
             border-radius: 60px;
@@ -95,25 +66,10 @@
             border: 1px solid #e2e8f0;
             box-shadow: 0 3px 6px rgba(0,0,0,0.05);
         }
-        .week-check {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-        .week-check input {
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-            accent-color: #f97316;
-        }
-        .hijri-input {
-            padding: 8px 20px;
-            border-radius: 50px;
-            border: 1px solid #cbd5e1;
-            width: 240px;
-        }
-
-        /* أزرار المستويات */
+        .week-check { display: flex; align-items: center; gap: 18px; }
+        .week-check input { width: 22px; height: 22px; cursor: pointer; accent-color: #f97316; }
+        .hijri-input { padding: 8px 20px; border-radius: 50px; border: 1px solid #cbd5e1; width: 240px; }
+        
         .class-level-btn {
             background: #eef2ff;
             border: none;
@@ -123,173 +79,47 @@
             margin-left: 12px;
             cursor: pointer;
             transition: 0.2s;
-            color: #1e293b;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .class-level-btn.active-level {
             background: #0f3b5c;
             color: white;
             box-shadow: 0 8px 16px -6px #0f3b5c80;
-            border-bottom: 2px solid #fbbf24;
         }
-        .date-badge {
-            background: #fef3c7;
-            padding: 8px 22px;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin-bottom: 24px;
-            border-right: 5px solid #f97316;
-        }
-
-        /* المجموعات - ألوان متعددة ومتناسقة */
-        .groups-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        /* كل مجموعة ستحصل على لون خلفية مختلف عبر css ديناميكي أو صفات فريدة */
-        .group-card {
-            border-radius: 36px;
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.2);
-        }
-        .group-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.25);
-        }
-        /* ألوان البطاقات يتم تطبيقها عبر js لكل مجموعة بكل فصل */
-        .group-title {
-            padding: 18px 28px;
-            font-weight: bold;
-            font-size: 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #ffffffdd;
-        }
-        th, td {
-            padding: 14px 8px;
-            text-align: center;
-            border-bottom: 1px solid #fde68a;
-        }
-        th {
-            background: #fffbeb;
-            color: #92400e;
-        }
-        select, .grade-cell-input {
-            padding: 8px 12px;
-            border-radius: 40px;
-            border: 1px solid #fed7aa;
-            background: white;
-        }
-        .delete-student-btn {
-            background: #ef4444;
-            padding: 5px 14px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-        }
-        .add-student-bar {
-            background: #fff7ed;
-            padding: 18px 26px;
-            border-radius: 28px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            align-items: center;
-        }
-        button {
-            background: #f97316;
-            border: none;
-            color: white;
-            padding: 8px 22px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-        button:hover {
-            background: #ea580c;
-            transform: scale(0.97);
-        }
-        .randomize-btn-header {
-            background: #8b5cf6;
-            box-shadow: 0 8px 18px rgba(139,92,246,0.4);
-        }
-        .result-card {
-            background: linear-gradient(105deg, #fef9e3, #fff3cf);
-            border-radius: 32px;
-            padding: 18px 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            border-right: 8px solid #facc15;
-            margin-bottom: 16px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-        }
-        /* نافذة النرد */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.65);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background: white;
-            padding: 35px;
-            border-radius: 70px;
-            text-align: center;
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 40px 50px rgba(0,0,0,0.4);
-        }
-        .dice {
-            font-size: 7rem;
-            margin: 15px 0;
-            cursor: pointer;
-            display: inline-block;
-            transition: 0.1s;
-        }
-        .spin-dice {
-            animation: spinRoll 0.5s cubic-bezier(0.4, 1.2, 0.8, 1) infinite;
-        }
-        @keyframes spinRoll {
-            0% { transform: rotate(0deg) scale(1);}
-            50% { transform: rotate(160deg) scale(1.2);}
-            100% { transform: rotate(360deg) scale(1);}
-        }
-        .selected-group-result {
-            background: #eef2ff;
-            padding: 16px;
-            border-radius: 60px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        .icon-bronze { color: #cd7f32; text-shadow: 0 0 2px #ffd966;}
-        .icon-gold { color: #f5b042; text-shadow: 0 0 3px #c97e0a;}
-        .icon-crown { color: #eab308; }
-        .btn-reset-list {
-            background: #3b82f6;
-            margin-top: 12px;
-        }
+        .groups-wrapper { display: flex; flex-direction: column; gap: 32px; }
+        .group-card { border-radius: 36px; overflow: hidden; transition: transform 0.2s, box-shadow 0.3s; box-shadow: 0 15px 30px -12px rgba(0,0,0,0.2); }
+        .group-card:hover { transform: translateY(-6px); }
+        .group-title { padding: 18px 28px; font-weight: bold; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); flex-wrap: wrap; gap: 10px; background: linear-gradient(135deg, #1e3c72, #2a5298); }
+        .group-stats { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 40px; }
+        table { width: 100%; border-collapse: collapse; background: #ffffffdd; }
+        th, td { padding: 14px 8px; text-align: center; border-bottom: 1px solid #fde68a; }
+        th { background: #fffbeb; color: #92400e; }
+        select, .grade-cell-input { padding: 8px 12px; border-radius: 40px; border: 1px solid #fed7aa; background: white; }
+        .delete-student-btn, .transfer-student-btn { padding: 5px 14px; border-radius: 30px; font-size: 0.75rem; box-shadow: 0 3px 6px rgba(0,0,0,0.15); margin: 0 3px; }
+        .delete-student-btn { background: #ef4444; }
+        .transfer-student-btn { background: #3b82f6; }
+        .add-student-bar { background: #fff7ed; padding: 18px 26px; border-radius: 28px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+        button { background: #f97316; border: none; color: white; padding: 8px 22px; border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.2s; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        button:hover { background: #ea580c; transform: scale(0.97); }
+        .randomize-btn-header { background: #8b5cf6; box-shadow: 0 8px 18px rgba(139,92,246,0.4); }
+        .result-card { background: linear-gradient(105deg, #fef9e3, #fff3cf); border-radius: 32px; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; border-right: 8px solid #facc15; margin-bottom: 16px; }
+        
+        /* Badge icons with green check */
+        .badge-icon { font-size: 1.5rem; cursor: pointer; margin: 0 4px; position: relative; display: inline-block; }
+        .badge-icon .fa-check-circle { position: absolute; bottom: -6px; right: -6px; font-size: 0.75rem; background: white; border-radius: 50%; color: #22c55e; }
+        
+        .week-icons-container { display: flex; justify-content: center; gap: 12px; margin-top: 15px; padding: 10px; background: #f8fafc; border-radius: 60px; flex-wrap: wrap; }
+        .week-icon { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-weight: bold; color: #1e293b; }
+        .week-icon.active-week { background: #f97316; color: white; box-shadow: 0 0 0 3px #ffedd5; }
+        .week-icon:hover { transform: scale(1.1); }
+        
+        /* Modal for transfer */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 35px; border-radius: 70px; text-align: center; width: 90%; max-width: 450px; }
+        .dice { font-size: 7rem; margin: 15px 0; cursor: pointer; display: inline-block; transition: 0.05s linear; }
+        .spin-dice-fast { animation: spinRollFast 0.15s linear infinite; }
+        @keyframes spinRollFast { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(360deg) scale(1.1); } }
+        .transfer-modal select { padding: 10px; margin: 15px 0; width: 100%; border-radius: 60px; border: 1px solid #cbd5e1; }
     </style>
 </head>
 <body>
@@ -301,8 +131,9 @@
     </div>
 
     <div id="tab-weeks" class="tab-content active">
-        <h3><i class="fas fa-calendar-alt"></i> الأسابيع الدراسية 1-20</h3>
+        <h3><i class="fas fa-calendar-alt"></i> الأسابيع الدراسية (1-20)</h3>
         <div class="weeks-grid" id="weeksContainer"></div>
+        <div class="note" style="margin-top: 15px;"><i class="fas fa-info-circle"></i> قم بتحديد ✓ بجانب الأسبوع ليظهر في تبويب الفصول.</div>
     </div>
 
     <div id="tab-classes" class="tab-content">
@@ -313,7 +144,7 @@
                 <button class="class-level-btn" data-level="ثاني 1">📙 ثاني 1</button>
                 <button class="class-level-btn" data-level="ثاني 2">📕 ثاني 2</button>
             </div>
-            <button id="randomPickerBtn" class="randomize-btn-header"><i class="fas fa-dice-d6"></i> 🎲 اختيار عشوائي (للفصل الحالي)</button>
+            <button id="randomPickerBtn" class="randomize-btn-header"><i class="fas fa-dice-d6"></i> 🎲 اختيار عشوائي</button>
         </div>
         <div id="dynamicGroupsArea"></div>
         <div class="add-group-area" style="margin-top: 30px; background: #f1f5f9; padding: 15px 25px; border-radius: 100px; display: flex; gap: 12px;">
@@ -323,82 +154,77 @@
     </div>
 
     <div id="tab-results" class="tab-content">
-        <h3><i class="fas fa-chart-simple"></i> النتائج (عدد مرات إضافة الدرجات)</h3>
+        <h3><i class="fas fa-chart-simple"></i> النتائج (مجموع الدرجات المضافة لكل مجموعة)</h3>
         <div id="resultsContainer" class="results-grid"></div>
     </div>
 </div>
 
-<!-- نافذة النرد المتطورة بدون تكرار + زر إرجاع -->
+<!-- Transfer Modal -->
+<div id="transferModal" class="modal">
+    <div class="modal-content">
+        <h3><i class="fas fa-exchange-alt"></i> نقل الطالب إلى مجموعة أخرى</h3>
+        <select id="targetGroupSelect"></select>
+        <button id="confirmTransferBtn" style="background:#22c55e;">تأكيد النقل</button>
+        <button id="closeTransferBtn" style="background:#64748b; margin-top:10px;">إلغاء</button>
+    </div>
+</div>
+
+<!-- Random Modal -->
 <div id="randomModal" class="modal">
     <div class="modal-content">
-        <h2><i class="fas fa-dice-d6"></i> سحب عشوائي بدون تكرار</h2>
+        <h2><i class="fas fa-dice-d6"></i> سحب عشوائي سريع</h2>
         <div class="dice" id="diceIcon">🎲</div>
-        <button id="rollDiceBtn" style="background: #f97316; font-size: 1rem;"><i class="fas fa-play"></i> دوّر النرد (5 ثوان)</button>
-        <div id="randomResult" class="selected-group-result">✨ سيتم اختيار مجموعة من الفصل الحالي ✨</div>
-        <button id="resetGroupsBtn" class="btn-reset-list"><i class="fas fa-undo-alt"></i> إرجاع المجموعات المحذوفة</button>
+        <button id="rollDiceBtn" style="background: #f97316;"><i class="fas fa-play"></i> دوّر النرد (7 ثوانٍ)</button>
+        <div id="randomResult" class="selected-group-result">✨ سيتم اختيار مجموعة ✨</div>
+        <button id="resetGroupsBtn" style="background:#3b82f6;"><i class="fas fa-undo-alt"></i> إرجاع المجموعات</button>
         <button class="close-modal" id="closeModalBtn" style="background: #64748b; margin-top: 14px;">إغلاق</button>
-        <p style="font-size:12px; margin-top:12px;">⚠️ عند اختيار مجموعة، تُحذف مؤقتاً لتجنب التكرار، يمكنك إرجاعها بالزر أعلاه.</p>
     </div>
 </div>
 
 <script>
-    // ---------- البيانات ----------
+    // ---------- هيكل البيانات ----------
     let weeks = [];
-    let classesData = {
-        "اول 1": { groups: [] },
-        "اول 2": { groups: [] },
-        "ثاني 1": { groups: [] },
-        "ثاني 2": { groups: [] }
-    };
-    let nextStudentId = 100;
-    let nextGroupId = 1;
+    let classesData = { "اول 1": { groups: [] }, "اول 2": { groups: [] }, "ثاني 1": { groups: [] }, "ثاني 2": { groups: [] } };
+    let nextStudentId = 100, nextGroupId = 1;
     let currentLevel = "اول 1";
+    let currentWeekView = {};
+    let pendingTransfer = { studentId: null, sourceGroupId: null, sourceLevel: null };
 
-    // ألوان متنوعة للـ group-title (خلفيات جذابة)
-    const colorPalette = [
-        "linear-gradient(135deg, #1e3c72, #2a5298)", // أزرق عميق
-        "linear-gradient(135deg, #0f4c3a, #1e7e6c)", // أخضر زمردي
-        "linear-gradient(135deg, #6b2e5a, #a14d76)", // وردي بنفسجي
-        "linear-gradient(135deg, #b85c1a, #e67e22)", // برتقالي محروق
-        "linear-gradient(135deg, #2c3e50, #4ca1af)", // كحلي نيلي
-        "linear-gradient(135deg, #8e44ad, #9b59b6)", // بنفسجي غامق
-        "linear-gradient(135deg, #c0392b, #e74c3c)", // أحمر خافت
-        "linear-gradient(135deg, #d35400, #f39c12)"  // كهرماني
-    ];
-
-    // توزيع الألوان على المجموعات بشكل فريد
-    function getGroupColor(index) {
-        return colorPalette[index % colorPalette.length];
-    }
-
-    // تهيئة الأسابيع
+    // تهيئة الأسابيع (1-20)
     for (let i = 1; i <= 20; i++) {
-        weeks.push({ weekNumber: i, hijriText: `الأسبوع ${i} - هجري (قابل للتعديل)`, active: false });
+        weeks.push({ weekNumber: i, hijriText: `الأسبوع ${i} - هجري`, active: false });
     }
 
-    function saveToLocal() {
-        const data = { weeks, classesData, nextStudentId, nextGroupId };
-        localStorage.setItem("weeksGroupsAppV3", JSON.stringify(data));
-    }
+    function saveToLocal() { localStorage.setItem("fullSystemV6", JSON.stringify({ weeks, classesData, nextStudentId, nextGroupId })); }
     function loadFromLocal() {
-        const saved = localStorage.getItem("weeksGroupsAppV3");
-        if (saved) {
-            try {
-                const p = JSON.parse(saved);
-                weeks = p.weeks;
-                classesData = p.classesData;
-                nextStudentId = p.nextStudentId;
-                nextGroupId = p.nextGroupId;
-            } catch(e) {}
+        let saved = localStorage.getItem("fullSystemV6");
+        if(saved) {
+            try { let p = JSON.parse(saved); weeks = p.weeks; classesData = p.classesData; nextStudentId = p.nextStudentId; nextGroupId = p.nextGroupId; } catch(e) {}
         }
     }
 
-    function getActiveWeeks() { return weeks.filter(w => w.active).map(w => w.weekNumber); }
-    function getHijriPreview() {
-        let active = getActiveWeeks();
-        if(active.length===0) return "لا توجد أسابيع مفعلة";
-        let w = weeks.find(w => w.active);
-        return w ? w.hijriText : "تاريخ";
+    function getActiveWeeks() { return weeks.filter(w => w.active).map(w => ({ weekNumber: w.weekNumber, hijriText: w.hijriText })); }
+
+    // حساب مجموع الدرجات المضافة عبر "إضافة درجة لكامل المجموعة" فقط
+    function getTotalBulkScoreForGroup(group) {
+        let total = 0;
+        if(group.bulkScores) {
+            for(let weekId in group.bulkScores) {
+                total += Number(group.bulkScores[weekId]) || 0;
+            }
+        }
+        return total;
+    }
+
+    // الحصول على شعار المجموعة بناءً على الترتيب
+    function getGroupRankIcon(groupId, allGroupsScores) {
+        let sorted = [...allGroupsScores].sort((a,b) => b.score - a.score);
+        let rank = sorted.findIndex(s => s.id === groupId) + 1;
+        if(rank === 1) return "<i class='fas fa-crown' style='color:gold; font-size:1.3rem;' title='التاج'></i>";
+        if(rank === 2) return "<i class='fas fa-trophy' style='color:#FFD700; font-size:1.2rem;' title='الكأس الذهبي'></i>";
+        if(rank === 3) return "<i class='fas fa-medal' style='color:#C0C0C0; font-size:1.2rem;' title='الكأس الفضي'></i>";
+        if(rank === 4) return "<i class='fas fa-medal' style='color:#FFB347; font-size:1.1rem;' title='الميدالية الذهبية'></i>";
+        return "<i class='fas fa-medal' style='color:#A9A9A9;' title='الميدالية الفضية'></i>";
     }
 
     // رندر الأسابيع
@@ -437,56 +263,84 @@
         });
     }
 
-    function renderGroupTable(group, groupIdx) {
-        const activeWeeks = getActiveWeeks();
-        if(activeWeeks.length === 0) return "<div class='note'>⚠️ فعّل الأسابيع أولاً.</div>";
-        let thead = `<table><th>الطالب</th><th>الصفة</th>`;
-        activeWeeks.forEach(w => thead += `<th>درجة أسبوع ${w}</th>`);
-        thead += `<th>حذف</th></tr>`;
+    // عرض جدول المجموعة
+    function renderGroupTableForWeek(group, groupId, selectedWeek) {
+        let weeksList = getActiveWeeks();
+        let weekData = weeksList.find(w => w.weekNumber === selectedWeek);
+        if(!weekData) return `<div class='note'>الرجاء اختيار أسبوع من الأيقونات أدناه</div>`;
+        
+        let thead = `<tr><th>الطالب</th><th>الصفة</th><th>الشارة</th><th>الدرجة (${escapeHtml(weekData.hijriText)})</th><th>نقل</th><th>حذف</th></tr>`;
         let tbody = "";
         group.students.forEach(s => {
+            let gradeVal = (s.grades && s.grades[selectedWeek] !== undefined) ? s.grades[selectedWeek] : '';
+            let badgeHtml = "";
+            if(s.badge === 'متميز') badgeHtml = `<i class="fas fa-star" style="color:#fbbf24;"></i> <i class="fas fa-check-circle" style="color:#22c55e; font-size:0.7rem;"></i>`;
+            else if(s.badge === 'متعاون') badgeHtml = `<i class="fas fa-handshake" style="color:#10b981;"></i> <i class="fas fa-check-circle" style="color:#22c55e; font-size:0.7rem;"></i>`;
+            else if(s.badge === 'غير متعاون') badgeHtml = `<i class="fas fa-times-circle" style="color:#ef4444;"></i> <i class="fas fa-check-circle" style="color:#22c55e; font-size:0.7rem;"></i>`;
+            else badgeHtml = `<i class="fas fa-star" style="color:#9ca3af;"></i>`;
+            
             tbody += `<tr data-student-id="${s.id}">
-                         <td>${escapeHtml(s.name)}</td>
-                         <td><select class="student-role" data-student="${s.id}">${['الرئيس','نائب الرئيس','المساعد','عضو'].map(opt => `<option ${s.role===opt ? 'selected':''}>${opt}</option>`).join('')}</select></td>`;
-            activeWeeks.forEach(week => {
-                let val = (s.grades && s.grades[week] !== undefined) ? s.grades[week] : '';
-                tbody += `<td><input type="number" class="grade-cell-input" data-student="${s.id}" data-week="${week}" value="${val}" style="width:75px;"></td>`;
-            });
-            tbody += `<td><button class="delete-student-btn" data-student="${s.id}"><i class="fas fa-trash"></i></button></td></tr>`;
+                        <td>${escapeHtml(s.name)}<\/td>
+                        <td><select class="student-role" data-student="${s.id}">${['رئيس','نائب رئيس','منسق','كاتب','مساعد كاتب','متحدث','مساعد متحدث','عضو'].map(opt => `<option ${s.role===opt ? 'selected':''}>${opt}</option>`).join('')}<\/select><\/td>
+                        <td><div class="badge-icons" data-student="${s.id}">
+                            <i class="fas fa-star badge-icon ${s.badge === 'متميز' ? 'selected' : ''}" data-badge="متميز" style="color:#fbbf24; font-size:1.3rem;"></i>
+                            <i class="fas fa-handshake badge-icon ${s.badge === 'متعاون' ? 'selected' : ''}" data-badge="متعاون" style="color:#10b981; font-size:1.3rem;"></i>
+                            <i class="fas fa-times-circle badge-icon ${s.badge === 'غير متعاون' ? 'selected' : ''}" data-badge="غير متعاون" style="color:#ef4444; font-size:1.3rem;"></i>
+                         <\/div><\/td>
+                        <td><input type="number" class="grade-cell-input" data-student="${s.id}" data-week="${selectedWeek}" value="${gradeVal}" style="width:90px;"><\/td>
+                        <td><button class="transfer-student-btn" data-student="${s.id}"><i class="fas fa-exchange-alt"></i> نقل<\/button><\/td>
+                        <td><button class="delete-student-btn" data-student="${s.id}"><i class="fas fa-trash"></i><\/button><\/td>
+                       `;
+            tbody += `</tr>`;
         });
-        let bulkRow = `<tr style="background:#fef3c7;"><td colspan="2">➕ إضافة درجة لكامل المجموعة</td>`;
-        activeWeeks.forEach(week => {
-            bulkRow += `<td><input type="number" id="bulk_${group.id}_${week}" placeholder="درجة" style="width:70px;"> <button class="add-bulk-grade" data-group="${group.id}" data-week="${week}">أضف</button></td>`;
-        });
-        bulkRow += `<td></td></tr>`;
+        // صف إضافة درجة لكامل المجموعة - نسخ الدرجة لجميع الطلاب (وليس جمع)
+        let bulkRow = `<tr style="background:#fef3c7;">
+                        <td colspan="3">➕ إضافة درجة لكامل المجموعة (نسخ)<\/td>
+                        <td><input type="number" id="bulk_${groupId}_${selectedWeek}" placeholder="درجة" style="width:90px;"> <button class="add-bulk-grade" data-group="${groupId}" data-week="${selectedWeek}">أضف وانسخ<\/button><\/td>
+                        <td colspan="2"><\/td>
+                      <\/tr>`;
         tbody += bulkRow;
-        return `<table style="width:100%">${thead}${tbody}</table>`;
+        return `<table style="width:100%">${thead}${tbody}<\/table>`;
     }
 
     function renderCurrentLevelGroups() {
-        const container = document.getElementById("dynamicGroupsArea");
-        const groups = classesData[currentLevel]?.groups || [];
-        const hijriDate = getHijriPreview();
-        let headerHtml = `<div class="date-badge"><i class="fas fa-moon"></i> التقويم: ${escapeHtml(hijriDate)}</div>`;
+        let container = document.getElementById("dynamicGroupsArea");
+        let groups = classesData[currentLevel]?.groups || [];
+        let activeWeeks = getActiveWeeks();
+        
         if(groups.length === 0) {
-            container.innerHTML = headerHtml + `<div class="note" style="padding:25px;">لا توجد مجموعات في هذا الفصل 📌</div>`;
+            container.innerHTML = `<div class="note" style="padding:25px;">لا توجد مجموعات، أضف مجموعة جديدة.</div>`;
             return;
         }
-        let groupsHtml = headerHtml + `<div class="groups-wrapper">`;
-        groups.forEach((g, idx) => {
-            const bgGradient = getGroupColor(idx);
+        
+        // حساب مجموع الدرجات لكل مجموعة لعرض الشعار
+        let allScores = groups.map(g => ({ id: g.id, score: getTotalBulkScoreForGroup(g) }));
+        
+        let groupsHtml = `<div class="groups-wrapper">`;
+        groups.forEach(g => {
+            if(!currentWeekView[g.id]) currentWeekView[g.id] = (activeWeeks.length > 0 ? activeWeeks[0].weekNumber : 1);
+            let selectedWeek = currentWeekView[g.id];
+            let totalBulkScore = getTotalBulkScoreForGroup(g);
+            let rankIcon = getGroupRankIcon(g.id, allScores);
+            
             groupsHtml += `
                 <div class="group-card">
-                    <div class="group-title" style="background: ${bgGradient};">
-                        <span><i class="fas fa-layer-group"></i> ${escapeHtml(g.name)}</span>
-                        <button class="delete-group-btn" data-group="${g.id}"><i class="fas fa-trash-alt"></i> حذف المجموعة</button>
+                    <div class="group-title">
+                        <div><i class="fas fa-layer-group"></i> ${rankIcon} ${escapeHtml(g.name)}</div>
+                        <div class="group-stats">
+                            <span style="background:rgba(0,0,0,0.4); padding:4px 12px; border-radius:40px;">📊 مجموع الإضافات: ${totalBulkScore} درجة</span>
+                            <button class="delete-group-btn" data-group="${g.id}"><i class="fas fa-trash-alt"></i> حذف</button>
+                        </div>
                     </div>
-                    <div style="padding:16px; overflow-x:auto;">${renderGroupTable(g, idx)}</div>
+                    <div style="padding:16px; overflow-x:auto;">
+                        ${renderGroupTableForWeek(g, g.id, selectedWeek)}
+                    </div>
+                    <div class="week-icons-container">
+                        ${activeWeeks.map(week => `<div class="week-icon ${selectedWeek === week.weekNumber ? 'active-week' : ''}" data-group="${g.id}" data-week="${week.weekNumber}">${week.weekNumber}</div>`).join('')}
+                    </div>
                     <div class="add-student-bar">
                         <input type="text" class="new-student-name" data-group="${g.id}" placeholder="اسم الطالب">
-                        <select class="new-student-role" data-group="${g.id}">
-                            <option>الرئيس</option><option>نائب الرئيس</option><option>المساعد</option><option>عضو</option>
-                        </select>
+                        <select class="new-student-role" data-group="${g.id}"><option>رئيس</option><option>نائب رئيس</option><option>منسق</option><option>كاتب</option><option>مساعد كاتب</option><option>متحدث</option><option>مساعد متحدث</option><option>عضو</option></select>
                         <button class="add-student-to-group" data-group="${g.id}">➕ إضافة طالب</button>
                     </div>
                 </div>`;
@@ -494,131 +348,139 @@
         groupsHtml += `</div>`;
         container.innerHTML = groupsHtml;
         attachGroupEvents();
+        attachWeekIconEvents();
     }
 
+    function attachWeekIconEvents() {
+        document.querySelectorAll('.week-icon').forEach(icon => {
+            icon.onclick = (e) => {
+                let groupId = parseInt(icon.dataset.group);
+                let weekNum = parseInt(icon.dataset.week);
+                currentWeekView[groupId] = weekNum;
+                renderCurrentLevelGroups();
+            };
+        });
+    }
+
+    // دوال مساعدة
+    function findGroupAndStudent(studentId) { for(let l in classesData) for(let g of classesData[l].groups) { let s = g.students.find(s => s.id === studentId); if(s) return { group: g, student: s, level: l }; } return null; }
+    function updateStudentAndSave(studentId, callback) { let res = findGroupAndStudent(studentId); if(res) { callback(res.student, res.group); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); } }
+    function handleRoleChange(e) { updateStudentAndSave(parseInt(e.target.dataset.student), (s)=> s.role = e.target.value); }
+    function handleDeleteStudent(e) { let sid = parseInt(e.target.closest('button').dataset.student); let res = findGroupAndStudent(sid); if(res) { let idx = res.group.students.findIndex(s=>s.id===sid); if(idx!==-1) res.group.students.splice(idx,1); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); } }
+    function handleGradeChange(e) { let sid = parseInt(e.target.dataset.student), week = parseInt(e.target.dataset.week), val = e.target.value === '' ? null : Number(e.target.value); updateStudentAndSave(sid, (s)=>{ if(!s.grades) s.grades={}; s.grades[week]=val; }); }
+    
+    // نسخ الدرجة لجميع الطلاب في المجموعة (استبدال وليس جمع)
+    function handleBulkGrade(e) { 
+        let gid = parseInt(e.target.dataset.group); 
+        let week = parseInt(e.target.dataset.week); 
+        let gradeVal = Number(document.getElementById(`bulk_${gid}_${week}`).value); 
+        if(isNaN(gradeVal)) gradeVal = 0; 
+        for(let l in classesData) { 
+            let grp = classesData[l].groups.find(g=>g.id===gid); 
+            if(grp) { 
+                // تخزين الدرجة في bulkScores للمجموعة
+                if(!grp.bulkScores) grp.bulkScores = {};
+                grp.bulkScores[week] = gradeVal;
+                // نسخ الدرجة لجميع الطلاب (استبدال)
+                grp.students.forEach(s => { 
+                    if(!s.grades) s.grades = {}; 
+                    s.grades[week] = gradeVal; 
+                }); 
+                saveToLocal(); 
+                renderCurrentLevelGroups(); 
+                renderResultsTab(); 
+                break; 
+            } 
+        } 
+    }
+    
+    function handleAddStudent(e) { let gid = parseInt(e.target.dataset.group), card = e.target.closest('.group-card'), nameInput = card.querySelector('.new-student-name'), roleSelect = card.querySelector('.new-student-role'); let sName = nameInput.value.trim(); if(!sName) { alert("أدخل الاسم"); return; } for(let l in classesData) { let grp = classesData[l].groups.find(g=>g.id===gid); if(grp) { grp.students.push({ id: nextStudentId++, name: sName, role: roleSelect.value, grades: {}, badge: null }); saveToLocal(); nameInput.value=""; renderCurrentLevelGroups(); renderResultsTab(); return; } } }
+    function handleDeleteGroup(e) { let gid = parseInt(e.target.closest('button').dataset.group); for(let l in classesData) { let idx = classesData[l].groups.findIndex(g=>g.id===gid); if(idx !== -1) { classesData[l].groups.splice(idx,1); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); return; } } }
+    
+    function handleBadgeClick(e) { 
+        let icon = e.target.closest('.badge-icon'); 
+        if(!icon) return; 
+        let badgeVal = icon.dataset.badge; 
+        let tr = icon.closest('tr'); 
+        if(tr) { 
+            let studentId = parseInt(tr.dataset.studentId); 
+            if(studentId) updateStudentAndSave(studentId, (s)=> s.badge = badgeVal); 
+        } 
+    }
+    
+    // نافذة النقل
+    function showTransferModal(studentId) {
+        let studentData = findGroupAndStudent(studentId);
+        if(!studentData) return;
+        let sourceGroup = studentData.group;
+        let currentLevelKey = studentData.level;
+        let otherGroups = classesData[currentLevelKey].groups.filter(g => g.id !== sourceGroup.id);
+        if(otherGroups.length === 0) {
+            alert("لا توجد مجموعات أخرى لنقل الطالب إليها");
+            return;
+        }
+        pendingTransfer = { studentId, sourceGroupId: sourceGroup.id, sourceLevel: currentLevelKey };
+        let select = document.getElementById("targetGroupSelect");
+        select.innerHTML = otherGroups.map(g => `<option value="${g.id}">${escapeHtml(g.name)}</option>`).join('');
+        document.getElementById("transferModal").style.display = "flex";
+    }
+    
+    function confirmTransfer() {
+        if(!pendingTransfer.studentId) return;
+        let targetGroupId = parseInt(document.getElementById("targetGroupSelect").value);
+        let sourceData = findGroupAndStudent(pendingTransfer.studentId);
+        if(!sourceData) { closeTransferModal(); return; }
+        let sourceGroup = sourceData.group;
+        let targetGroup = null;
+        for(let g of classesData[pendingTransfer.sourceLevel].groups) {
+            if(g.id === targetGroupId) { targetGroup = g; break; }
+        }
+        if(targetGroup && sourceGroup) {
+            let studentIndex = sourceGroup.students.findIndex(s => s.id === pendingTransfer.studentId);
+            if(studentIndex !== -1) {
+                let student = sourceGroup.students[studentIndex];
+                sourceGroup.students.splice(studentIndex, 1);
+                targetGroup.students.push(student);
+                saveToLocal();
+                renderCurrentLevelGroups();
+                renderResultsTab();
+                alert("تم نقل الطالب بنجاح");
+            }
+        }
+        closeTransferModal();
+    }
+    
+    function closeTransferModal() {
+        document.getElementById("transferModal").style.display = "none";
+        pendingTransfer = { studentId: null, sourceGroupId: null, sourceLevel: null };
+    }
+    
     function attachGroupEvents() {
-        document.querySelectorAll('.student-role').forEach(select => select.onchange = handleRoleChange);
+        document.querySelectorAll('.student-role').forEach(s => s.onchange = handleRoleChange);
         document.querySelectorAll('.delete-student-btn').forEach(btn => btn.onclick = handleDeleteStudent);
         document.querySelectorAll('.grade-cell-input').forEach(inp => inp.onchange = handleGradeChange);
         document.querySelectorAll('.add-bulk-grade').forEach(btn => btn.onclick = handleBulkGrade);
         document.querySelectorAll('.add-student-to-group').forEach(btn => btn.onclick = handleAddStudent);
         document.querySelectorAll('.delete-group-btn').forEach(btn => btn.onclick = handleDeleteGroup);
+        document.querySelectorAll('.badge-icon').forEach(icon => icon.onclick = handleBadgeClick);
+        document.querySelectorAll('.transfer-student-btn').forEach(btn => btn.onclick = (e) => { let sid = parseInt(e.target.closest('button').dataset.student); showTransferModal(sid); });
     }
+    
+    function addNewGroupToCurrentLevel() { let name = document.getElementById("newGroupName").value.trim(); if(!name) { alert("أدخل اسم المجموعة"); return; } classesData[currentLevel].groups.push({ id: nextGroupId++, name: name, students: [], bulkScores: {} }); saveToLocal(); document.getElementById("newGroupName").value = ""; renderCurrentLevelGroups(); renderResultsTab(); }
+    
+    function computeGroupsTotalBulkScores() { let res = []; for(let level in classesData) for(let group of classesData[level].groups) res.push({ groupDisplay: `${level} - ${group.name}`, totalScore: getTotalBulkScoreForGroup(group) }); return res; }
+    function renderResultsTab() { let container = document.getElementById("resultsContainer"); let res = computeGroupsTotalBulkScores(); if(!res.length) { container.innerHTML = "<div class='note'>لا توجد مجموعات بعد.</div>"; return; } container.innerHTML = res.map(r => `<div class="result-card"><div><strong>📌 ${escapeHtml(r.groupDisplay)}</strong></div><div>🏆 مجموع الإضافات: ${r.totalScore}</div></div>`).join(''); }
 
-    function handleRoleChange(e) { let sid = parseInt(e.target.dataset.student), val = e.target.value; updateStudent(sid, s => s.role = val); saveToLocal(); renderResultsTab(); }
-    function handleDeleteStudent(e) { let sid = parseInt(e.target.closest('button').dataset.student); updateStudent(sid, (s,g,i)=> g.students.splice(i,1)); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); }
-    function handleGradeChange(e) { let sid = parseInt(e.target.dataset.student), week = parseInt(e.target.dataset.week), val = e.target.value === '' ? null : Number(e.target.value); if(!isNaN(val) || val===null) updateStudent(sid, s => { if(!s.grades) s.grades={}; s.grades[week] = val; }); saveToLocal(); renderResultsTab(); }
-    function handleBulkGrade(e) { let gid = parseInt(e.target.dataset.group), week = parseInt(e.target.dataset.week); let gradeVal = Number(document.getElementById(`bulk_${gid}_${week}`).value); if(isNaN(gradeVal)) gradeVal=0; for(let level in classesData) { let grp = classesData[level].groups.find(g=>g.id===gid); if(grp) { grp.students.forEach(s => { if(!s.grades) s.grades={}; s.grades[week] = gradeVal; }); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); break; } } }
-    function handleAddStudent(e) { let gid = parseInt(e.target.dataset.group); let card = e.target.closest('.group-card'); let nameInput = card.querySelector('.new-student-name'); let roleSelect = card.querySelector('.new-student-role'); let sName = nameInput.value.trim(); if(!sName) { alert("أدخل الاسم"); return; } for(let level in classesData) { let grp = classesData[level].groups.find(g=>g.id===gid); if(grp) { grp.students.push({ id: nextStudentId++, name: sName, role: roleSelect.value, grades: {} }); saveToLocal(); nameInput.value=""; renderCurrentLevelGroups(); renderResultsTab(); return; } } }
-    function handleDeleteGroup(e) { let gid = parseInt(e.target.closest('button').dataset.group); for(let level in classesData) { let idx = classesData[level].groups.findIndex(g=>g.id===gid); if(idx !== -1) { classesData[level].groups.splice(idx,1); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); return; } } }
-    function updateStudent(studentId, callback) { for(let level in classesData) { for(let g of classesData[level].groups) { let idx = g.students.findIndex(s=>s.id===studentId); if(idx !== -1) { callback(g.students[idx], g, idx); saveToLocal(); return; } } } }
+    // العشوائي
+    let currentAvailableGroups = [], rollTimeout = null;
+    function updateRandomPool() { currentAvailableGroups = classesData[currentLevel].groups.map(g => ({ id: g.id, name: g.name, level: currentLevel })); }
+    function showRandomPickerModal() { updateRandomPool(); let modal = document.getElementById("randomModal"), dice = document.getElementById("diceIcon"), resultDiv = document.getElementById("randomResult"), rollBtn = document.getElementById("rollDiceBtn"), resetBtn = document.getElementById("resetGroupsBtn"); let stopSpinAndPick = () => { dice.classList.remove('spin-dice-fast'); if(currentAvailableGroups.length === 0) { resultDiv.innerHTML = "⚠️ لا توجد مجموعات متاحة، قم بإرجاع القائمة."; return; } let rand = Math.floor(Math.random() * currentAvailableGroups.length); let chosen = currentAvailableGroups[rand]; currentAvailableGroups.splice(rand,1); resultDiv.innerHTML = `🎉 ${chosen.level} - ${chosen.name} 🎉<br><small>(تم استبعادها)</small>`; }; let startRoll = () => { if(rollTimeout) clearTimeout(rollTimeout); if(currentAvailableGroups.length===0 && classesData[currentLevel].groups.length>0) updateRandomPool(); if(currentAvailableGroups.length===0) { resultDiv.innerHTML = "⚠️ لا مجموعات متاحة، أعد ضبط القائمة."; return; } dice.classList.add('spin-dice-fast'); resultDiv.innerHTML = "🌀 يدور النرد بسرعة ... 7 ثوانٍ 🎲"; rollTimeout = setTimeout(() => { stopSpinAndPick(); rollTimeout = null; }, 7000); }; rollBtn.onclick = startRoll; dice.onclick = startRoll; resetBtn.onclick = () => { updateRandomPool(); resultDiv.innerHTML = `✨ تم إرجاع (${currentAvailableGroups.length}) مجموعة ✨`; if(rollTimeout) clearTimeout(rollTimeout); dice.classList.remove('spin-dice-fast'); }; modal.style.display = "flex"; document.getElementById("closeModalBtn").onclick = () => { if(rollTimeout) clearTimeout(rollTimeout); dice.classList.remove('spin-dice-fast'); modal.style.display = "none"; }; window.onclick = (e) => { if(e.target === modal) modal.style.display = "none"; }; }
 
-    function addNewGroupToCurrentLevel() { let name = document.getElementById("newGroupName").value.trim(); if(!name) { alert("أدخل اسم المجموعة"); return; } classesData[currentLevel].groups.push({ id: nextGroupId++, name: name, students: [] }); saveToLocal(); document.getElementById("newGroupName").value = ""; renderCurrentLevelGroups(); renderResultsTab(); }
+    function setupTabs() { document.querySelectorAll('.tab-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active'); if(btn.dataset.tab === 'tab-weeks') renderWeeksTab(); else if(btn.dataset.tab === 'tab-classes') renderCurrentLevelGroups(); else renderResultsTab(); }; }); }
+    function setupClassLevels() { document.querySelectorAll('.class-level-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.class-level-btn').forEach(b=>b.classList.remove('active-level')); btn.classList.add('active-level'); currentLevel = btn.dataset.level; renderCurrentLevelGroups(); }; }); }
 
-    function computeScoresByAdditionCount() {
-        const activeWeeksSet = new Set(getActiveWeeks()); let results = [];
-        for(let level in classesData) { for(let group of classesData[level].groups) { let addedCount = 0; for(let student of group.students) { if(student.grades) { for(let wk in student.grades) { let weekNum = parseInt(wk); if(activeWeeksSet.has(weekNum) && student.grades[wk] !== undefined && student.grades[wk] !== null && student.grades[wk] !== "") addedCount++; } } } let icon = ""; if(addedCount>=1 && addedCount<=5) icon = `<i class="fas fa-medal icon-bronze fa-2x"></i> برونزية`; else if(addedCount>=6 && addedCount<=12) icon = `<i class="fas fa-medal icon-gold fa-2x"></i> ذهبية`; else if(addedCount>=13 && addedCount<=20) icon = `<i class="fas fa-crown icon-crown fa-2x"></i> تاج`; else icon = `<i class="fas fa-chart-line"></i>`; results.push({ groupDisplay: `${level} - ${group.name}`, addedCount, icon }); } } return results;
-    }
-    function renderResultsTab() { let container = document.getElementById("resultsContainer"); let res = computeScoresByAdditionCount(); if(!res.length) { container.innerHTML = "<div class='note'>لا توجد درجات مضافة بعد.</div>"; return; } container.innerHTML = res.map(r => `<div class="result-card"><div><strong>📌 ${escapeHtml(r.groupDisplay)}</strong></div><div>📊 عدد الإضافات: ${r.addedCount}</div><div>${r.icon}</div></div>`).join(''); }
-
-    // ---------- العشوائي بدون تكرار ----------
-    let currentAvailableGroups = [];   // قائمة المجموعات المتاحة (نسخة مؤقتة)
-    let currentLevelCache = "";
-    function updateRandomPool() {
-        const groups = classesData[currentLevel]?.groups || [];
-        currentAvailableGroups = groups.map(g => ({ id: g.id, name: g.name, level: currentLevel }));
-        currentLevelCache = currentLevel;
-    }
-    function resetRandomPool() { updateRandomPool(); return currentAvailableGroups.length; }
-
-    let rollTimeout = null;
-    function showRandomPickerModal() {
-        updateRandomPool();
-        const modal = document.getElementById("randomModal");
-        const dice = document.getElementById("diceIcon");
-        const resultDiv = document.getElementById("randomResult");
-        const rollBtn = document.getElementById("rollDiceBtn");
-        const resetBtn = document.getElementById("resetGroupsBtn");
-        
-        const stopSpinAndPick = () => {
-            if(dice.classList.contains('spin-dice')) dice.classList.remove('spin-dice');
-            if(currentAvailableGroups.length === 0) {
-                resultDiv.innerHTML = "⚠️ لا توجد مجموعات متاحة حالياً! اضغط 'إرجاع المجموعات المحذوفة' لاستعادة القائمة.";
-                return;
-            }
-            const randomIndex = Math.floor(Math.random() * currentAvailableGroups.length);
-            const chosen = currentAvailableGroups[randomIndex];
-            // حذف المجموعة المختارة من القائمة المؤقتة (منع التكرار)
-            currentAvailableGroups.splice(randomIndex, 1);
-            resultDiv.innerHTML = `🎉 تم الاختيار: <strong style="font-size:1.2rem;">${chosen.level} - ${chosen.name}</strong> 🎉 <br> <span style="font-size:0.8rem;">✅ (تم استبعادها لتجنب التكرار)</span>`;
-        };
-        
-        const startRoll = () => {
-            if(rollTimeout) clearTimeout(rollTimeout);
-            if(currentAvailableGroups.length === 0 && currentLevelCache === currentLevel) {
-                resultDiv.innerHTML = "⚠️ لا توجد مجموعات متاحة، قم بإرجاع القائمة باستخدام الزر أدناه.";
-                return;
-            }
-            dice.classList.add('spin-dice');
-            resultDiv.innerHTML = "🌀 جاري السحب العشوائي لمدة 5 ثواني ... 🎲";
-            rollTimeout = setTimeout(() => {
-                stopSpinAndPick();
-                rollTimeout = null;
-            }, 5000);
-        };
-        
-        rollBtn.onclick = startRoll;
-        dice.onclick = startRoll;
-        resetBtn.onclick = () => {
-            updateRandomPool();
-            resultDiv.innerHTML = `✨ تم إرجاع جميع المجموعات (${currentAvailableGroups.length} مجموعة متاحة) ✨`;
-            if(rollTimeout) clearTimeout(rollTimeout);
-            if(dice.classList.contains('spin-dice')) dice.classList.remove('spin-dice');
-        };
-        modal.style.display = "flex";
-        document.getElementById("closeModalBtn").onclick = () => {
-            if(rollTimeout) clearTimeout(rollTimeout);
-            if(dice.classList.contains('spin-dice')) dice.classList.remove('spin-dice');
-            modal.style.display = "none";
-        };
-        window.onclick = (e) => { if(e.target === modal) modal.style.display = "none"; };
-    }
-
-    // باقي التعريفات
-    function setupTabs() {
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById(btn.dataset.tab).classList.add('active');
-                if(btn.dataset.tab === 'tab-weeks') renderWeeksTab();
-                else if(btn.dataset.tab === 'tab-classes') renderCurrentLevelGroups();
-                else if(btn.dataset.tab === 'tab-results') renderResultsTab();
-            };
-        });
-    }
-    function setupClassLevels() {
-        document.querySelectorAll('.class-level-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.class-level-btn').forEach(b=>b.classList.remove('active-level'));
-                btn.classList.add('active-level');
-                currentLevel = btn.dataset.level;
-                renderCurrentLevelGroups();
-            };
-        });
-    }
-    document.addEventListener("DOMContentLoaded", () => {
-        loadFromLocal();
-        renderWeeksTab();
-        setupTabs();
-        setupClassLevels();
-        document.getElementById("addGroupBtn").onclick = () => addNewGroupToCurrentLevel();
-        document.getElementById("randomPickerBtn").onclick = () => showRandomPickerModal();
-        renderCurrentLevelGroups();
-        renderResultsTab();
-    });
-    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    document.addEventListener("DOMContentLoaded", () => { loadFromLocal(); renderWeeksTab(); setupTabs(); setupClassLevels(); document.getElementById("addGroupBtn").onclick = () => addNewGroupToCurrentLevel(); document.getElementById("randomPickerBtn").onclick = () => showRandomPickerModal(); document.getElementById("confirmTransferBtn").onclick = () => confirmTransfer(); document.getElementById("closeTransferBtn").onclick = () => closeTransferModal(); renderCurrentLevelGroups(); renderResultsTab(); });
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 </script>
 </body>
 </html>
