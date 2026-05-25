@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>نظام المجموعات المتقدم - النسخ والنقل والشعارات</title>
+    <title>نظام المجموعات المتقدم - شارات مع مربع اختيار</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -104,16 +105,50 @@
         .randomize-btn-header { background: #8b5cf6; box-shadow: 0 8px 18px rgba(139,92,246,0.4); }
         .result-card { background: linear-gradient(105deg, #fef9e3, #fff3cf); border-radius: 32px; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; border-right: 8px solid #facc15; margin-bottom: 16px; }
         
-        /* Badge icons with green check */
-        .badge-icon { font-size: 1.5rem; cursor: pointer; margin: 0 4px; position: relative; display: inline-block; }
-        .badge-icon .fa-check-circle { position: absolute; bottom: -6px; right: -6px; font-size: 0.75rem; background: white; border-radius: 50%; color: #22c55e; }
+        /* Badge styles - كل شاردة لها مربع اختيار دائري */
+        .badge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            margin: 0 8px;
+            cursor: pointer;
+        }
+        .badge-icon {
+            font-size: 1.5rem;
+        }
+        .badge-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #94a3b8;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .badge-checkbox.selected {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+        .badge-checkbox i {
+            font-size: 10px;
+        }
+        .badge-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
         
         .week-icons-container { display: flex; justify-content: center; gap: 12px; margin-top: 15px; padding: 10px; background: #f8fafc; border-radius: 60px; flex-wrap: wrap; }
         .week-icon { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-weight: bold; color: #1e293b; }
         .week-icon.active-week { background: #f97316; color: white; box-shadow: 0 0 0 3px #ffedd5; }
         .week-icon:hover { transform: scale(1.1); }
         
-        /* Modal for transfer */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
         .modal-content { background: white; padding: 35px; border-radius: 70px; text-align: center; width: 90%; max-width: 450px; }
         .dice { font-size: 7rem; margin: 15px 0; cursor: pointer; display: inline-block; transition: 0.05s linear; }
@@ -195,9 +230,9 @@
         weeks.push({ weekNumber: i, hijriText: `الأسبوع ${i} - هجري`, active: false });
     }
 
-    function saveToLocal() { localStorage.setItem("fullSystemV6", JSON.stringify({ weeks, classesData, nextStudentId, nextGroupId })); }
+    function saveToLocal() { localStorage.setItem("fullSystemV7", JSON.stringify({ weeks, classesData, nextStudentId, nextGroupId })); }
     function loadFromLocal() {
-        let saved = localStorage.getItem("fullSystemV6");
+        let saved = localStorage.getItem("fullSystemV7");
         if(saved) {
             try { let p = JSON.parse(saved); weeks = p.weeks; classesData = p.classesData; nextStudentId = p.nextStudentId; nextGroupId = p.nextGroupId; } catch(e) {}
         }
@@ -205,7 +240,6 @@
 
     function getActiveWeeks() { return weeks.filter(w => w.active).map(w => ({ weekNumber: w.weekNumber, hijriText: w.hijriText })); }
 
-    // حساب مجموع الدرجات المضافة عبر "إضافة درجة لكامل المجموعة" فقط
     function getTotalBulkScoreForGroup(group) {
         let total = 0;
         if(group.bulkScores) {
@@ -216,7 +250,6 @@
         return total;
     }
 
-    // الحصول على شعار المجموعة بناءً على الترتيب
     function getGroupRankIcon(groupId, allGroupsScores) {
         let sorted = [...allGroupsScores].sort((a,b) => b.score - a.score);
         let rank = sorted.findIndex(s => s.id === groupId) + 1;
@@ -227,7 +260,6 @@
         return "<i class='fas fa-medal' style='color:#A9A9A9;' title='الميدالية الفضية'></i>";
     }
 
-    // رندر الأسابيع
     function renderWeeksTab() {
         const container = document.getElementById("weeksContainer");
         container.innerHTML = "";
@@ -263,7 +295,6 @@
         });
     }
 
-    // عرض جدول المجموعة
     function renderGroupTableForWeek(group, groupId, selectedWeek) {
         let weeksList = getActiveWeeks();
         let weekData = weeksList.find(w => w.weekNumber === selectedWeek);
@@ -273,27 +304,42 @@
         let tbody = "";
         group.students.forEach(s => {
             let gradeVal = (s.grades && s.grades[selectedWeek] !== undefined) ? s.grades[selectedWeek] : '';
-            let badgeHtml = "";
-            if(s.badge === 'متميز') badgeHtml = `<i class="fas fa-star" style="color:#fbbf24;"></i> <i class="fas fa-check-circle" style="color:#22c55e; font-size:0.7rem;"></i>`;
-            else if(s.badge === 'متعاون') badgeHtml = `<i class="fas fa-handshake" style="color:#10b981;"></i> <i class="fas fa-check-circle" style="color:#22c55e; font-size:0.7rem;"></i>`;
-            else if(s.badge === 'غير متعاون') badgeHtml = `<i class="fas fa-times-circle" style="color:#ef4444;"></i> <i class="fas fa-check-circle" style="color:#22c55e; font-size:0.7rem;"></i>`;
-            else badgeHtml = `<i class="fas fa-star" style="color:#9ca3af;"></i>`;
+            
+            // بناء واجهة الشارة مع مربعات اختيار
+            let badgesHtml = `
+                <div class="badge-wrapper">
+                    <div class="badge-container" data-badge-type="متميز" data-student="${s.id}">
+                        <i class="fas fa-star badge-icon" style="color:#fbbf24;"></i>
+                        <div class="badge-checkbox ${s.badge === 'متميز' ? 'selected' : ''}">
+                            ${s.badge === 'متميز' ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                    </div>
+                    <div class="badge-container" data-badge-type="متعاون" data-student="${s.id}">
+                        <i class="fas fa-handshake badge-icon" style="color:#10b981;"></i>
+                        <div class="badge-checkbox ${s.badge === 'متعاون' ? 'selected' : ''}">
+                            ${s.badge === 'متعاون' ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                    </div>
+                    <div class="badge-container" data-badge-type="غير متعاون" data-student="${s.id}">
+                        <i class="fas fa-times-circle badge-icon" style="color:#ef4444;"></i>
+                        <div class="badge-checkbox ${s.badge === 'غير متعاون' ? 'selected' : ''}">
+                            ${s.badge === 'غير متعاون' ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
             
             tbody += `<tr data-student-id="${s.id}">
                         <td>${escapeHtml(s.name)}<\/td>
                         <td><select class="student-role" data-student="${s.id}">${['رئيس','نائب رئيس','منسق','كاتب','مساعد كاتب','متحدث','مساعد متحدث','عضو'].map(opt => `<option ${s.role===opt ? 'selected':''}>${opt}</option>`).join('')}<\/select><\/td>
-                        <td><div class="badge-icons" data-student="${s.id}">
-                            <i class="fas fa-star badge-icon ${s.badge === 'متميز' ? 'selected' : ''}" data-badge="متميز" style="color:#fbbf24; font-size:1.3rem;"></i>
-                            <i class="fas fa-handshake badge-icon ${s.badge === 'متعاون' ? 'selected' : ''}" data-badge="متعاون" style="color:#10b981; font-size:1.3rem;"></i>
-                            <i class="fas fa-times-circle badge-icon ${s.badge === 'غير متعاون' ? 'selected' : ''}" data-badge="غير متعاون" style="color:#ef4444; font-size:1.3rem;"></i>
-                         <\/div><\/td>
+                        <td>${badgesHtml}<\/td>
                         <td><input type="number" class="grade-cell-input" data-student="${s.id}" data-week="${selectedWeek}" value="${gradeVal}" style="width:90px;"><\/td>
                         <td><button class="transfer-student-btn" data-student="${s.id}"><i class="fas fa-exchange-alt"></i> نقل<\/button><\/td>
                         <td><button class="delete-student-btn" data-student="${s.id}"><i class="fas fa-trash"></i><\/button><\/td>
                        `;
             tbody += `</tr>`;
         });
-        // صف إضافة درجة لكامل المجموعة - نسخ الدرجة لجميع الطلاب (وليس جمع)
+        
         let bulkRow = `<tr style="background:#fef3c7;">
                         <td colspan="3">➕ إضافة درجة لكامل المجموعة (نسخ)<\/td>
                         <td><input type="number" id="bulk_${groupId}_${selectedWeek}" placeholder="درجة" style="width:90px;"> <button class="add-bulk-grade" data-group="${groupId}" data-week="${selectedWeek}">أضف وانسخ<\/button><\/td>
@@ -313,7 +359,6 @@
             return;
         }
         
-        // حساب مجموع الدرجات لكل مجموعة لعرض الشعار
         let allScores = groups.map(g => ({ id: g.id, score: getTotalBulkScoreForGroup(g) }));
         
         let groupsHtml = `<div class="groups-wrapper">`;
@@ -349,6 +394,7 @@
         container.innerHTML = groupsHtml;
         attachGroupEvents();
         attachWeekIconEvents();
+        attachBadgeEvents();
     }
 
     function attachWeekIconEvents() {
@@ -361,15 +407,30 @@
             };
         });
     }
+    
+    function attachBadgeEvents() {
+        document.querySelectorAll('.badge-container').forEach(container => {
+            container.onclick = (e) => {
+                e.stopPropagation();
+                let studentId = parseInt(container.dataset.student);
+                let badgeType = container.dataset.badgeType;
+                updateStudentAndSave(studentId, (student) => {
+                    if(student.badge === badgeType) {
+                        student.badge = null;
+                    } else {
+                        student.badge = badgeType;
+                    }
+                });
+            };
+        });
+    }
 
-    // دوال مساعدة
     function findGroupAndStudent(studentId) { for(let l in classesData) for(let g of classesData[l].groups) { let s = g.students.find(s => s.id === studentId); if(s) return { group: g, student: s, level: l }; } return null; }
     function updateStudentAndSave(studentId, callback) { let res = findGroupAndStudent(studentId); if(res) { callback(res.student, res.group); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); } }
     function handleRoleChange(e) { updateStudentAndSave(parseInt(e.target.dataset.student), (s)=> s.role = e.target.value); }
     function handleDeleteStudent(e) { let sid = parseInt(e.target.closest('button').dataset.student); let res = findGroupAndStudent(sid); if(res) { let idx = res.group.students.findIndex(s=>s.id===sid); if(idx!==-1) res.group.students.splice(idx,1); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); } }
     function handleGradeChange(e) { let sid = parseInt(e.target.dataset.student), week = parseInt(e.target.dataset.week), val = e.target.value === '' ? null : Number(e.target.value); updateStudentAndSave(sid, (s)=>{ if(!s.grades) s.grades={}; s.grades[week]=val; }); }
     
-    // نسخ الدرجة لجميع الطلاب في المجموعة (استبدال وليس جمع)
     function handleBulkGrade(e) { 
         let gid = parseInt(e.target.dataset.group); 
         let week = parseInt(e.target.dataset.week); 
@@ -378,10 +439,8 @@
         for(let l in classesData) { 
             let grp = classesData[l].groups.find(g=>g.id===gid); 
             if(grp) { 
-                // تخزين الدرجة في bulkScores للمجموعة
                 if(!grp.bulkScores) grp.bulkScores = {};
                 grp.bulkScores[week] = gradeVal;
-                // نسخ الدرجة لجميع الطلاب (استبدال)
                 grp.students.forEach(s => { 
                     if(!s.grades) s.grades = {}; 
                     s.grades[week] = gradeVal; 
@@ -397,18 +456,6 @@
     function handleAddStudent(e) { let gid = parseInt(e.target.dataset.group), card = e.target.closest('.group-card'), nameInput = card.querySelector('.new-student-name'), roleSelect = card.querySelector('.new-student-role'); let sName = nameInput.value.trim(); if(!sName) { alert("أدخل الاسم"); return; } for(let l in classesData) { let grp = classesData[l].groups.find(g=>g.id===gid); if(grp) { grp.students.push({ id: nextStudentId++, name: sName, role: roleSelect.value, grades: {}, badge: null }); saveToLocal(); nameInput.value=""; renderCurrentLevelGroups(); renderResultsTab(); return; } } }
     function handleDeleteGroup(e) { let gid = parseInt(e.target.closest('button').dataset.group); for(let l in classesData) { let idx = classesData[l].groups.findIndex(g=>g.id===gid); if(idx !== -1) { classesData[l].groups.splice(idx,1); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); return; } } }
     
-    function handleBadgeClick(e) { 
-        let icon = e.target.closest('.badge-icon'); 
-        if(!icon) return; 
-        let badgeVal = icon.dataset.badge; 
-        let tr = icon.closest('tr'); 
-        if(tr) { 
-            let studentId = parseInt(tr.dataset.studentId); 
-            if(studentId) updateStudentAndSave(studentId, (s)=> s.badge = badgeVal); 
-        } 
-    }
-    
-    // نافذة النقل
     function showTransferModal(studentId) {
         let studentData = findGroupAndStudent(studentId);
         if(!studentData) return;
@@ -462,7 +509,6 @@
         document.querySelectorAll('.add-bulk-grade').forEach(btn => btn.onclick = handleBulkGrade);
         document.querySelectorAll('.add-student-to-group').forEach(btn => btn.onclick = handleAddStudent);
         document.querySelectorAll('.delete-group-btn').forEach(btn => btn.onclick = handleDeleteGroup);
-        document.querySelectorAll('.badge-icon').forEach(icon => icon.onclick = handleBadgeClick);
         document.querySelectorAll('.transfer-student-btn').forEach(btn => btn.onclick = (e) => { let sid = parseInt(e.target.closest('button').dataset.student); showTransferModal(sid); });
     }
     
@@ -471,7 +517,6 @@
     function computeGroupsTotalBulkScores() { let res = []; for(let level in classesData) for(let group of classesData[level].groups) res.push({ groupDisplay: `${level} - ${group.name}`, totalScore: getTotalBulkScoreForGroup(group) }); return res; }
     function renderResultsTab() { let container = document.getElementById("resultsContainer"); let res = computeGroupsTotalBulkScores(); if(!res.length) { container.innerHTML = "<div class='note'>لا توجد مجموعات بعد.</div>"; return; } container.innerHTML = res.map(r => `<div class="result-card"><div><strong>📌 ${escapeHtml(r.groupDisplay)}</strong></div><div>🏆 مجموع الإضافات: ${r.totalScore}</div></div>`).join(''); }
 
-    // العشوائي
     let currentAvailableGroups = [], rollTimeout = null;
     function updateRandomPool() { currentAvailableGroups = classesData[currentLevel].groups.map(g => ({ id: g.id, name: g.name, level: currentLevel })); }
     function showRandomPickerModal() { updateRandomPool(); let modal = document.getElementById("randomModal"), dice = document.getElementById("diceIcon"), resultDiv = document.getElementById("randomResult"), rollBtn = document.getElementById("rollDiceBtn"), resetBtn = document.getElementById("resetGroupsBtn"); let stopSpinAndPick = () => { dice.classList.remove('spin-dice-fast'); if(currentAvailableGroups.length === 0) { resultDiv.innerHTML = "⚠️ لا توجد مجموعات متاحة، قم بإرجاع القائمة."; return; } let rand = Math.floor(Math.random() * currentAvailableGroups.length); let chosen = currentAvailableGroups[rand]; currentAvailableGroups.splice(rand,1); resultDiv.innerHTML = `🎉 ${chosen.level} - ${chosen.name} 🎉<br><small>(تم استبعادها)</small>`; }; let startRoll = () => { if(rollTimeout) clearTimeout(rollTimeout); if(currentAvailableGroups.length===0 && classesData[currentLevel].groups.length>0) updateRandomPool(); if(currentAvailableGroups.length===0) { resultDiv.innerHTML = "⚠️ لا مجموعات متاحة، أعد ضبط القائمة."; return; } dice.classList.add('spin-dice-fast'); resultDiv.innerHTML = "🌀 يدور النرد بسرعة ... 7 ثوانٍ 🎲"; rollTimeout = setTimeout(() => { stopSpinAndPick(); rollTimeout = null; }, 7000); }; rollBtn.onclick = startRoll; dice.onclick = startRoll; resetBtn.onclick = () => { updateRandomPool(); resultDiv.innerHTML = `✨ تم إرجاع (${currentAvailableGroups.length}) مجموعة ✨`; if(rollTimeout) clearTimeout(rollTimeout); dice.classList.remove('spin-dice-fast'); }; modal.style.display = "flex"; document.getElementById("closeModalBtn").onclick = () => { if(rollTimeout) clearTimeout(rollTimeout); dice.classList.remove('spin-dice-fast'); modal.style.display = "none"; }; window.onclick = (e) => { if(e.target === modal) modal.style.display = "none"; }; }
