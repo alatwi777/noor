@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>نظام المجموعات المتقدم - شارات مع مربع اختيار</title>
+    <title>نظام المجموعات - دائرة عشوائية وساعة رملية تفاعلية واقعية</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -105,7 +104,7 @@
         .randomize-btn-header { background: #8b5cf6; box-shadow: 0 8px 18px rgba(139,92,246,0.4); }
         .result-card { background: linear-gradient(105deg, #fef9e3, #fff3cf); border-radius: 32px; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; border-right: 8px solid #facc15; margin-bottom: 16px; }
         
-        /* Badge styles - كل شاردة لها مربع اختيار دائري */
+        /* Badge styles */
         .badge-container {
             display: flex;
             flex-direction: column;
@@ -114,9 +113,7 @@
             margin: 0 8px;
             cursor: pointer;
         }
-        .badge-icon {
-            font-size: 1.5rem;
-        }
+        .badge-icon { font-size: 1.5rem; }
         .badge-checkbox {
             width: 18px;
             height: 18px;
@@ -127,34 +124,92 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: 0.1s;
         }
-        .badge-checkbox.selected {
-            background: #22c55e;
-            border-color: #22c55e;
-            color: white;
-        }
-        .badge-checkbox i {
-            font-size: 10px;
-        }
-        .badge-wrapper {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
+        .badge-checkbox.selected { background: #22c55e; border-color: #22c55e; color: white; }
+        .badge-checkbox i { font-size: 10px; }
+        .badge-wrapper { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
         
         .week-icons-container { display: flex; justify-content: center; gap: 12px; margin-top: 15px; padding: 10px; background: #f8fafc; border-radius: 60px; flex-wrap: wrap; }
         .week-icon { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-weight: bold; color: #1e293b; }
         .week-icon.active-week { background: #f97316; color: white; box-shadow: 0 0 0 3px #ffedd5; }
-        .week-icon:hover { transform: scale(1.1); }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
-        .modal-content { background: white; padding: 35px; border-radius: 70px; text-align: center; width: 90%; max-width: 450px; }
-        .dice { font-size: 7rem; margin: 15px 0; cursor: pointer; display: inline-block; transition: 0.05s linear; }
-        .spin-dice-fast { animation: spinRollFast 0.15s linear infinite; }
-        @keyframes spinRollFast { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(360deg) scale(1.1); } }
+        /* الدائرة العشوائية */
+        .wheel-wrapper {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 20px auto;
+        }
+        .wheel-canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 0.05s linear;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #f1f5f9;
+        }
+        .pointer {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            color: #dc2626;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            z-index: 3;
+        }
+        
+        /* الساعة الرملية الواقعية والجميلة */
+        .hourglass-container {
+            position: relative;
+            width: 260px;
+            height: 340px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        .hourglass-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.25));
+            transition: transform 0.2s;
+        }
+        .hourglass-svg:hover {
+            transform: scale(1.02);
+        }
+        .sand-stream {
+            animation: streamFlow 0.3s infinite;
+        }
+        @keyframes streamFlow {
+            0% { opacity: 0.7; transform: scaleY(0.95); }
+            100% { opacity: 1; transform: scaleY(1); }
+        }
+        .timer-text-elegant {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #b45309;
+            background: #fffbeb;
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 60px;
+            font-family: monospace;
+            letter-spacing: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-content { background: linear-gradient(145deg, #fff7ed, #ffedd5); padding: 30px; border-radius: 80px; text-align: center; width: 90%; max-width: 550px; box-shadow: 0 30px 50px rgba(0,0,0,0.3); }
         .transfer-modal select { padding: 10px; margin: 15px 0; width: 100%; border-radius: 60px; border: 1px solid #cbd5e1; }
+        
+        @keyframes sandPulse {
+            0% { filter: drop-shadow(0 0 2px #f59e0b); }
+            100% { filter: drop-shadow(0 0 12px #f97316); }
+        }
     </style>
 </head>
 <body>
@@ -168,7 +223,6 @@
     <div id="tab-weeks" class="tab-content active">
         <h3><i class="fas fa-calendar-alt"></i> الأسابيع الدراسية (1-20)</h3>
         <div class="weeks-grid" id="weeksContainer"></div>
-        <div class="note" style="margin-top: 15px;"><i class="fas fa-info-circle"></i> قم بتحديد ✓ بجانب الأسبوع ليظهر في تبويب الفصول.</div>
     </div>
 
     <div id="tab-classes" class="tab-content">
@@ -179,7 +233,7 @@
                 <button class="class-level-btn" data-level="ثاني 1">📙 ثاني 1</button>
                 <button class="class-level-btn" data-level="ثاني 2">📕 ثاني 2</button>
             </div>
-            <button id="randomPickerBtn" class="randomize-btn-header"><i class="fas fa-dice-d6"></i> 🎲 اختيار عشوائي</button>
+            <button id="randomPickerBtn" class="randomize-btn-header"><i class="fas fa-dice-d6"></i> 🎲 اختيار عشوائي (دائرة)</button>
         </div>
         <div id="dynamicGroupsArea"></div>
         <div class="add-group-area" style="margin-top: 30px; background: #f1f5f9; padding: 15px 25px; border-radius: 100px; display: flex; gap: 12px;">
@@ -194,6 +248,67 @@
     </div>
 </div>
 
+<!-- Random Wheel Modal -->
+<div id="randomModal" class="modal">
+    <div class="modal-content">
+        <h3><i class="fas fa-circle-notch"></i> 🎡 دائرة الاختيار العشوائي (بدون تكرار)</h3>
+        <div class="wheel-wrapper">
+            <div class="pointer"><i class="fas fa-caret-up"></i></div>
+            <div class="wheel-canvas">
+                <canvas id="wheelCanvas" width="320" height="320"></canvas>
+            </div>
+        </div>
+        <button id="spinWheelBtn" style="background: #f97316; margin-top: 15px;"><i class="fas fa-play"></i> تدوير (3 ثوانٍ)</button>
+        <div id="randomResult" class="selected-group-result" style="margin-top: 15px;">✨ اضغط تدوير لاختيار مجموعة ✨</div>
+        <button id="resetWheelBtn" style="background: #10b981; margin-top: 10px;"><i class="fas fa-undo-alt"></i> إعادة ضبط القائمة</button>
+        <button id="timerBtn" style="background: #3b82f6; margin-top: 10px;"><i class="fas fa-hourglass-half"></i> ⌛ الساعة الرملية (60 ثانية)</button>
+        <button class="close-modal" id="closeModalBtn" style="background: #64748b; margin-top: 15px;">إغلاق</button>
+    </div>
+</div>
+
+<!-- Timer Modal - ساعة رملية واقعية مع رمال تتحرك -->
+<div id="timerModal" class="modal">
+    <div class="modal-content">
+        <h3><i class="fas fa-hourglass-half"></i> ⌛ الساعة الرملية التفاعلية ⌛</h3>
+        <div class="hourglass-container" id="hourglassContainer">
+            <svg class="hourglass-svg" viewBox="0 0 200 280">
+                <!-- الإطار الخارجي الخشبي -->
+                <rect x="25" y="10" width="150" height="260" rx="15" fill="#b45309" stroke="#78350f" stroke-width="3"/>
+                <!-- الزجاج العلوي -->
+                <path d="M35 15 L165 15 L135 85 L65 85 Z" fill="#fef3c7" stroke="#78350f" stroke-width="2.5"/>
+                <!-- الزجاج السفلي -->
+                <path d="M35 265 L165 265 L135 195 L65 195 Z" fill="#fef3c7" stroke="#78350f" stroke-width="2.5"/>
+                <!-- الرمل العلوي (يتناقص) -->
+                <path id="topSand" d="M38 18 L162 18 L133 82 L67 82 Z" fill="#fbbf24" clip-path="url(#topClip)"/>
+                <!-- الرمل السفلي (يتزايد) -->
+                <path id="bottomSand" d="M38 262 L162 262 L133 198 L67 198 Z" fill="#f59e0b" clip-path="url(#bottomClip)"/>
+                <!-- تيار الرمل المتساقط -->
+                <rect id="sandStream" x="92" y="80" width="16" height="20" fill="#fbbf24" rx="2" opacity="0"/>
+                <!-- العنق -->
+                <rect x="85" y="130" width="30" height="20" rx="4" fill="#78350f"/>
+                <circle cx="100" cy="140" r="7" fill="#fef3c7" stroke="#78350f" stroke-width="2"/>
+                <!-- خطوط زخرفية -->
+                <line x1="30" y1="12" x2="170" y2="12" stroke="#78350f" stroke-width="3"/>
+                <line x1="30" y1="268" x2="170" y2="268" stroke="#78350f" stroke-width="3"/>
+                <!-- نقوش جانبية -->
+                <circle cx="30" cy="140" r="4" fill="#78350f"/>
+                <circle cx="170" cy="140" r="4" fill="#78350f"/>
+                
+                <defs>
+                    <clipPath id="topClip">
+                        <rect id="topRect" x="35" y="15" width="130" height="70"/>
+                    </clipPath>
+                    <clipPath id="bottomClip">
+                        <rect id="bottomRect" x="35" y="195" width="130" height="70"/>
+                    </clipPath>
+                </defs>
+            </svg>
+        </div>
+        <div id="timerCountdown" class="timer-text-elegant">01:00</div>
+        <button id="closeTimerBtn" style="background: #64748b; margin-top: 20px;">إغلاق</button>
+    </div>
+</div>
+
 <!-- Transfer Modal -->
 <div id="transferModal" class="modal">
     <div class="modal-content">
@@ -204,60 +319,40 @@
     </div>
 </div>
 
-<!-- Random Modal -->
-<div id="randomModal" class="modal">
-    <div class="modal-content">
-        <h2><i class="fas fa-dice-d6"></i> سحب عشوائي سريع</h2>
-        <div class="dice" id="diceIcon">🎲</div>
-        <button id="rollDiceBtn" style="background: #f97316;"><i class="fas fa-play"></i> دوّر النرد (7 ثوانٍ)</button>
-        <div id="randomResult" class="selected-group-result">✨ سيتم اختيار مجموعة ✨</div>
-        <button id="resetGroupsBtn" style="background:#3b82f6;"><i class="fas fa-undo-alt"></i> إرجاع المجموعات</button>
-        <button class="close-modal" id="closeModalBtn" style="background: #64748b; margin-top: 14px;">إغلاق</button>
-    </div>
-</div>
-
 <script>
-    // ---------- هيكل البيانات ----------
+    // ---------- البيانات الأساسية ----------
     let weeks = [];
     let classesData = { "اول 1": { groups: [] }, "اول 2": { groups: [] }, "ثاني 1": { groups: [] }, "ثاني 2": { groups: [] } };
     let nextStudentId = 100, nextGroupId = 1;
     let currentLevel = "اول 1";
     let currentWeekView = {};
     let pendingTransfer = { studentId: null, sourceGroupId: null, sourceLevel: null };
+    let spinInterval = null, spinTimeout = null, timerInterval = null;
+    
+    // متغيرات الدائرة العشوائية
+    let currentAvailableGroups = [];
+    let currentRotation = 0;
+    let wheelGroups = [];
+    let canvas = null, ctx = null;
 
-    // تهيئة الأسابيع (1-20)
-    for (let i = 1; i <= 20; i++) {
-        weeks.push({ weekNumber: i, hijriText: `الأسبوع ${i} - هجري`, active: false });
-    }
+    for (let i = 1; i <= 20; i++) weeks.push({ weekNumber: i, hijriText: `الأسبوع ${i} - هجري`, active: false });
 
-    function saveToLocal() { localStorage.setItem("fullSystemV7", JSON.stringify({ weeks, classesData, nextStudentId, nextGroupId })); }
+    function saveToLocal() { localStorage.setItem("fullSystemV13", JSON.stringify({ weeks, classesData, nextStudentId, nextGroupId })); }
     function loadFromLocal() {
-        let saved = localStorage.getItem("fullSystemV7");
-        if(saved) {
-            try { let p = JSON.parse(saved); weeks = p.weeks; classesData = p.classesData; nextStudentId = p.nextStudentId; nextGroupId = p.nextGroupId; } catch(e) {}
-        }
+        let saved = localStorage.getItem("fullSystemV13");
+        if(saved) { try { let p = JSON.parse(saved); weeks = p.weeks; classesData = p.classesData; nextStudentId = p.nextStudentId; nextGroupId = p.nextGroupId; } catch(e) {} }
     }
 
     function getActiveWeeks() { return weeks.filter(w => w.active).map(w => ({ weekNumber: w.weekNumber, hijriText: w.hijriText })); }
-
-    function getTotalBulkScoreForGroup(group) {
-        let total = 0;
-        if(group.bulkScores) {
-            for(let weekId in group.bulkScores) {
-                total += Number(group.bulkScores[weekId]) || 0;
-            }
-        }
-        return total;
-    }
-
-    function getGroupRankIcon(groupId, allGroupsScores) {
-        let sorted = [...allGroupsScores].sort((a,b) => b.score - a.score);
+    function getTotalBulkScoreForGroup(group) { let total = 0; if(group.bulkScores) for(let w in group.bulkScores) total += Number(group.bulkScores[w]) || 0; return total; }
+    function getGroupRankIcon(groupId, allScores) {
+        let sorted = [...allScores].sort((a,b)=>b.score - a.score);
         let rank = sorted.findIndex(s => s.id === groupId) + 1;
-        if(rank === 1) return "<i class='fas fa-crown' style='color:gold; font-size:1.3rem;' title='التاج'></i>";
-        if(rank === 2) return "<i class='fas fa-trophy' style='color:#FFD700; font-size:1.2rem;' title='الكأس الذهبي'></i>";
-        if(rank === 3) return "<i class='fas fa-medal' style='color:#C0C0C0; font-size:1.2rem;' title='الكأس الفضي'></i>";
-        if(rank === 4) return "<i class='fas fa-medal' style='color:#FFB347; font-size:1.1rem;' title='الميدالية الذهبية'></i>";
-        return "<i class='fas fa-medal' style='color:#A9A9A9;' title='الميدالية الفضية'></i>";
+        if(rank === 1) return "<i class='fas fa-crown' style='color:gold; font-size:1.3rem;'></i>";
+        if(rank === 2) return "<i class='fas fa-trophy' style='color:#FFD700; font-size:1.2rem;'></i>";
+        if(rank === 3) return "<i class='fas fa-medal' style='color:#C0C0C0; font-size:1.2rem;'></i>";
+        if(rank === 4) return "<i class='fas fa-medal' style='color:#FFB347; font-size:1.1rem;'></i>";
+        return "<i class='fas fa-medal' style='color:#A9A9A9;'></i>";
     }
 
     function renderWeeksTab() {
@@ -266,129 +361,55 @@
         weeks.forEach(week => {
             const div = document.createElement("div");
             div.className = "week-item";
-            div.innerHTML = `
-                <div class="week-check">
-                    <input type="checkbox" data-week="${week.weekNumber}" ${week.active ? 'checked' : ''}>
-                    <span class="week-name">📅 الأسبوع ${week.weekNumber}</span>
-                </div>
-                <div><input type="text" class="hijri-input" data-week="${week.weekNumber}" value="${escapeHtml(week.hijriText)}"></div>
-            `;
+            div.innerHTML = `<div class="week-check"><input type="checkbox" data-week="${week.weekNumber}" ${week.active ? 'checked' : ''}><span class="week-name">📅 الأسبوع ${week.weekNumber}</span></div><div><input type="text" class="hijri-input" data-week="${week.weekNumber}" value="${escapeHtml(week.hijriText)}"></div>`;
             container.appendChild(div);
         });
-        document.querySelectorAll('#weeksContainer input[type="checkbox"]').forEach(cb => {
-            cb.onchange = (e) => {
-                let wNum = parseInt(e.target.dataset.week);
-                let w = weeks.find(w=>w.weekNumber===wNum);
-                if(w) w.active = e.target.checked;
-                saveToLocal();
-                if(document.getElementById("tab-classes").classList.contains("active")) renderCurrentLevelGroups();
-                renderResultsTab();
-            };
-        });
-        document.querySelectorAll('#weeksContainer .hijri-input').forEach(inp => {
-            inp.onchange = (e) => {
-                let wNum = parseInt(e.target.dataset.week);
-                let w = weeks.find(w=>w.weekNumber===wNum);
-                if(w) w.hijriText = e.target.value;
-                saveToLocal();
-            };
-        });
+        document.querySelectorAll('#weeksContainer input[type="checkbox"]').forEach(cb => cb.onchange = (e) => { let w = weeks.find(w=>w.weekNumber===parseInt(e.target.dataset.week)); if(w) w.active = e.target.checked; saveToLocal(); if(document.getElementById("tab-classes").classList.contains("active")) renderCurrentLevelGroups(); renderResultsTab(); });
+        document.querySelectorAll('#weeksContainer .hijri-input').forEach(inp => inp.onchange = (e) => { let w = weeks.find(w=>w.weekNumber===parseInt(e.target.dataset.week)); if(w) w.hijriText = e.target.value; saveToLocal(); });
     }
 
     function renderGroupTableForWeek(group, groupId, selectedWeek) {
         let weeksList = getActiveWeeks();
         let weekData = weeksList.find(w => w.weekNumber === selectedWeek);
-        if(!weekData) return `<div class='note'>الرجاء اختيار أسبوع من الأيقونات أدناه</div>`;
-        
+        if(!weekData) return `<div class='note'>اختر أسبوعاً من الأيقونات</div>`;
         let thead = `<tr><th>الطالب</th><th>الصفة</th><th>الشارة</th><th>الدرجة (${escapeHtml(weekData.hijriText)})</th><th>نقل</th><th>حذف</th></tr>`;
         let tbody = "";
         group.students.forEach(s => {
             let gradeVal = (s.grades && s.grades[selectedWeek] !== undefined) ? s.grades[selectedWeek] : '';
-            
-            // بناء واجهة الشارة مع مربعات اختيار
-            let badgesHtml = `
-                <div class="badge-wrapper">
-                    <div class="badge-container" data-badge-type="متميز" data-student="${s.id}">
-                        <i class="fas fa-star badge-icon" style="color:#fbbf24;"></i>
-                        <div class="badge-checkbox ${s.badge === 'متميز' ? 'selected' : ''}">
-                            ${s.badge === 'متميز' ? '<i class="fas fa-check"></i>' : ''}
-                        </div>
-                    </div>
-                    <div class="badge-container" data-badge-type="متعاون" data-student="${s.id}">
-                        <i class="fas fa-handshake badge-icon" style="color:#10b981;"></i>
-                        <div class="badge-checkbox ${s.badge === 'متعاون' ? 'selected' : ''}">
-                            ${s.badge === 'متعاون' ? '<i class="fas fa-check"></i>' : ''}
-                        </div>
-                    </div>
-                    <div class="badge-container" data-badge-type="غير متعاون" data-student="${s.id}">
-                        <i class="fas fa-times-circle badge-icon" style="color:#ef4444;"></i>
-                        <div class="badge-checkbox ${s.badge === 'غير متعاون' ? 'selected' : ''}">
-                            ${s.badge === 'غير متعاون' ? '<i class="fas fa-check"></i>' : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            tbody += `<tr data-student-id="${s.id}">
-                        <td>${escapeHtml(s.name)}<\/td>
-                        <td><select class="student-role" data-student="${s.id}">${['رئيس','نائب رئيس','منسق','كاتب','مساعد كاتب','متحدث','مساعد متحدث','عضو'].map(opt => `<option ${s.role===opt ? 'selected':''}>${opt}</option>`).join('')}<\/select><\/td>
-                        <td>${badgesHtml}<\/td>
-                        <td><input type="number" class="grade-cell-input" data-student="${s.id}" data-week="${selectedWeek}" value="${gradeVal}" style="width:90px;"><\/td>
-                        <td><button class="transfer-student-btn" data-student="${s.id}"><i class="fas fa-exchange-alt"></i> نقل<\/button><\/td>
-                        <td><button class="delete-student-btn" data-student="${s.id}"><i class="fas fa-trash"></i><\/button><\/td>
-                       `;
-            tbody += `</tr>`;
+            let badgesHtml = `<div class="badge-wrapper">
+                <div class="badge-container" data-badge-type="متميز" data-student="${s.id}"><i class="fas fa-star badge-icon" style="color:#fbbf24;"></i><div class="badge-checkbox ${s.badge === 'متميز' ? 'selected' : ''}">${s.badge === 'متميز' ? '<i class="fas fa-check"></i>' : ''}</div></div>
+                <div class="badge-container" data-badge-type="متعاون" data-student="${s.id}"><i class="fas fa-handshake badge-icon" style="color:#10b981;"></i><div class="badge-checkbox ${s.badge === 'متعاون' ? 'selected' : ''}">${s.badge === 'متعاون' ? '<i class="fas fa-check"></i>' : ''}</div></div>
+                <div class="badge-container" data-badge-type="غير متعاون" data-student="${s.id}"><i class="fas fa-times-circle badge-icon" style="color:#ef4444;"></i><div class="badge-checkbox ${s.badge === 'غير متعاون' ? 'selected' : ''}">${s.badge === 'غير متعاون' ? '<i class="fas fa-check"></i>' : ''}</div></div>
+            </div>`;
+            tbody += `<tr data-student-id="${s.id}"><td>${escapeHtml(s.name)}</td>
+                        <td><select class="student-role" data-student="${s.id}">${['رئيس','نائب رئيس','منسق','كاتب','مساعد كاتب','متحدث','مساعد متحدث','عضو'].map(opt => `<option ${s.role===opt ? 'selected':''}>${opt}</option>`).join('')}</select></td>
+                        <td>${badgesHtml}</td>
+                        <td><input type="number" class="grade-cell-input" data-student="${s.id}" data-week="${selectedWeek}" value="${gradeVal}" style="width:90px;"></td>
+                        <td><button class="transfer-student-btn" data-student="${s.id}"><i class="fas fa-exchange-alt"></i> نقل</button></td>
+                        <td><button class="delete-student-btn" data-student="${s.id}"><i class="fas fa-trash"></i></button></td>
+                       </tr>`;
         });
-        
-        let bulkRow = `<tr style="background:#fef3c7;">
-                        <td colspan="3">➕ إضافة درجة لكامل المجموعة (نسخ)<\/td>
-                        <td><input type="number" id="bulk_${groupId}_${selectedWeek}" placeholder="درجة" style="width:90px;"> <button class="add-bulk-grade" data-group="${groupId}" data-week="${selectedWeek}">أضف وانسخ<\/button><\/td>
-                        <td colspan="2"><\/td>
-                      <\/tr>`;
+        let bulkRow = `<tr style="background:#fef3c7;"><td colspan="3">➕ إضافة درجة لكامل المجموعة (نسخ)</td>
+                         <td><input type="number" id="bulk_${groupId}_${selectedWeek}" placeholder="درجة" style="width:90px;"> <button class="add-bulk-grade" data-group="${groupId}" data-week="${selectedWeek}">أضف وانسخ</button></td>
+                        <td colspan="2"></td>
+                       </tr>`;
         tbody += bulkRow;
-        return `<table style="width:100%">${thead}${tbody}<\/table>`;
+        return `<table style="width:100%">${thead}${tbody}</table>`;
     }
 
     function renderCurrentLevelGroups() {
         let container = document.getElementById("dynamicGroupsArea");
         let groups = classesData[currentLevel]?.groups || [];
         let activeWeeks = getActiveWeeks();
-        
-        if(groups.length === 0) {
-            container.innerHTML = `<div class="note" style="padding:25px;">لا توجد مجموعات، أضف مجموعة جديدة.</div>`;
-            return;
-        }
-        
+        if(groups.length === 0) { container.innerHTML = `<div class="note">لا توجد مجموعات، أضف مجموعة جديدة.</div>`; return; }
         let allScores = groups.map(g => ({ id: g.id, score: getTotalBulkScoreForGroup(g) }));
-        
         let groupsHtml = `<div class="groups-wrapper">`;
         groups.forEach(g => {
             if(!currentWeekView[g.id]) currentWeekView[g.id] = (activeWeeks.length > 0 ? activeWeeks[0].weekNumber : 1);
             let selectedWeek = currentWeekView[g.id];
             let totalBulkScore = getTotalBulkScoreForGroup(g);
             let rankIcon = getGroupRankIcon(g.id, allScores);
-            
-            groupsHtml += `
-                <div class="group-card">
-                    <div class="group-title">
-                        <div><i class="fas fa-layer-group"></i> ${rankIcon} ${escapeHtml(g.name)}</div>
-                        <div class="group-stats">
-                            <span style="background:rgba(0,0,0,0.4); padding:4px 12px; border-radius:40px;">📊 مجموع الإضافات: ${totalBulkScore} درجة</span>
-                            <button class="delete-group-btn" data-group="${g.id}"><i class="fas fa-trash-alt"></i> حذف</button>
-                        </div>
-                    </div>
-                    <div style="padding:16px; overflow-x:auto;">
-                        ${renderGroupTableForWeek(g, g.id, selectedWeek)}
-                    </div>
-                    <div class="week-icons-container">
-                        ${activeWeeks.map(week => `<div class="week-icon ${selectedWeek === week.weekNumber ? 'active-week' : ''}" data-group="${g.id}" data-week="${week.weekNumber}">${week.weekNumber}</div>`).join('')}
-                    </div>
-                    <div class="add-student-bar">
-                        <input type="text" class="new-student-name" data-group="${g.id}" placeholder="اسم الطالب">
-                        <select class="new-student-role" data-group="${g.id}"><option>رئيس</option><option>نائب رئيس</option><option>منسق</option><option>كاتب</option><option>مساعد كاتب</option><option>متحدث</option><option>مساعد متحدث</option><option>عضو</option></select>
-                        <button class="add-student-to-group" data-group="${g.id}">➕ إضافة طالب</button>
-                    </div>
-                </div>`;
+            groupsHtml += `<div class="group-card"><div class="group-title"><div><i class="fas fa-layer-group"></i> ${rankIcon} ${escapeHtml(g.name)}</div><div class="group-stats"><span>📊 مجموع الإضافات: ${totalBulkScore} درجة</span><button class="delete-group-btn" data-group="${g.id}"><i class="fas fa-trash-alt"></i> حذف</button></div></div><div style="padding:16px; overflow-x:auto;">${renderGroupTableForWeek(g, g.id, selectedWeek)}</div><div class="week-icons-container">${activeWeeks.map(week => `<div class="week-icon ${selectedWeek === week.weekNumber ? 'active-week' : ''}" data-group="${g.id}" data-week="${week.weekNumber}">${week.weekNumber}</div>`).join('')}</div><div class="add-student-bar"><input type="text" class="new-student-name" data-group="${g.id}" placeholder="اسم الطالب"><select class="new-student-role" data-group="${g.id}"><option>رئيس</option><option>نائب رئيس</option><option>منسق</option><option>كاتب</option><option>مساعد كاتب</option><option>متحدث</option><option>مساعد متحدث</option><option>عضو</option></select><button class="add-student-to-group" data-group="${g.id}">➕ إضافة طالب</button></div></div>`;
         });
         groupsHtml += `</div>`;
         container.innerHTML = groupsHtml;
@@ -397,134 +418,205 @@
         attachBadgeEvents();
     }
 
-    function attachWeekIconEvents() {
-        document.querySelectorAll('.week-icon').forEach(icon => {
-            icon.onclick = (e) => {
-                let groupId = parseInt(icon.dataset.group);
-                let weekNum = parseInt(icon.dataset.week);
-                currentWeekView[groupId] = weekNum;
-                renderCurrentLevelGroups();
-            };
-        });
-    }
-    
-    function attachBadgeEvents() {
-        document.querySelectorAll('.badge-container').forEach(container => {
-            container.onclick = (e) => {
-                e.stopPropagation();
-                let studentId = parseInt(container.dataset.student);
-                let badgeType = container.dataset.badgeType;
-                updateStudentAndSave(studentId, (student) => {
-                    if(student.badge === badgeType) {
-                        student.badge = null;
-                    } else {
-                        student.badge = badgeType;
-                    }
-                });
-            };
-        });
-    }
-
+    function attachWeekIconEvents() { document.querySelectorAll('.week-icon').forEach(icon => icon.onclick = () => { currentWeekView[parseInt(icon.dataset.group)] = parseInt(icon.dataset.week); renderCurrentLevelGroups(); }); }
+    function attachBadgeEvents() { document.querySelectorAll('.badge-container').forEach(cont => cont.onclick = (e) => { e.stopPropagation(); let sid = parseInt(cont.dataset.student), badge = cont.dataset.badgeType; updateStudentAndSave(sid, s => s.badge = (s.badge === badge ? null : badge)); }); }
     function findGroupAndStudent(studentId) { for(let l in classesData) for(let g of classesData[l].groups) { let s = g.students.find(s => s.id === studentId); if(s) return { group: g, student: s, level: l }; } return null; }
     function updateStudentAndSave(studentId, callback) { let res = findGroupAndStudent(studentId); if(res) { callback(res.student, res.group); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); } }
-    function handleRoleChange(e) { updateStudentAndSave(parseInt(e.target.dataset.student), (s)=> s.role = e.target.value); }
+    function handleRoleChange(e) { updateStudentAndSave(parseInt(e.target.dataset.student), s => s.role = e.target.value); }
     function handleDeleteStudent(e) { let sid = parseInt(e.target.closest('button').dataset.student); let res = findGroupAndStudent(sid); if(res) { let idx = res.group.students.findIndex(s=>s.id===sid); if(idx!==-1) res.group.students.splice(idx,1); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); } }
-    function handleGradeChange(e) { let sid = parseInt(e.target.dataset.student), week = parseInt(e.target.dataset.week), val = e.target.value === '' ? null : Number(e.target.value); updateStudentAndSave(sid, (s)=>{ if(!s.grades) s.grades={}; s.grades[week]=val; }); }
-    
-    function handleBulkGrade(e) { 
-        let gid = parseInt(e.target.dataset.group); 
-        let week = parseInt(e.target.dataset.week); 
-        let gradeVal = Number(document.getElementById(`bulk_${gid}_${week}`).value); 
-        if(isNaN(gradeVal)) gradeVal = 0; 
-        for(let l in classesData) { 
-            let grp = classesData[l].groups.find(g=>g.id===gid); 
-            if(grp) { 
-                if(!grp.bulkScores) grp.bulkScores = {};
-                grp.bulkScores[week] = gradeVal;
-                grp.students.forEach(s => { 
-                    if(!s.grades) s.grades = {}; 
-                    s.grades[week] = gradeVal; 
-                }); 
-                saveToLocal(); 
-                renderCurrentLevelGroups(); 
-                renderResultsTab(); 
-                break; 
-            } 
-        } 
-    }
-    
+    function handleGradeChange(e) { let sid = parseInt(e.target.dataset.student), week = parseInt(e.target.dataset.week), val = e.target.value === '' ? null : Number(e.target.value); updateStudentAndSave(sid, s => { if(!s.grades) s.grades={}; s.grades[week]=val; }); }
+    function handleBulkGrade(e) { let gid = parseInt(e.target.dataset.group), week = parseInt(e.target.dataset.week), gradeVal = Number(document.getElementById(`bulk_${gid}_${week}`).value); if(isNaN(gradeVal)) gradeVal=0; for(let l in classesData) { let grp = classesData[l].groups.find(g=>g.id===gid); if(grp) { if(!grp.bulkScores) grp.bulkScores={}; grp.bulkScores[week]=gradeVal; grp.students.forEach(s => { if(!s.grades) s.grades={}; s.grades[week]=gradeVal; }); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); break; } } }
     function handleAddStudent(e) { let gid = parseInt(e.target.dataset.group), card = e.target.closest('.group-card'), nameInput = card.querySelector('.new-student-name'), roleSelect = card.querySelector('.new-student-role'); let sName = nameInput.value.trim(); if(!sName) { alert("أدخل الاسم"); return; } for(let l in classesData) { let grp = classesData[l].groups.find(g=>g.id===gid); if(grp) { grp.students.push({ id: nextStudentId++, name: sName, role: roleSelect.value, grades: {}, badge: null }); saveToLocal(); nameInput.value=""; renderCurrentLevelGroups(); renderResultsTab(); return; } } }
     function handleDeleteGroup(e) { let gid = parseInt(e.target.closest('button').dataset.group); for(let l in classesData) { let idx = classesData[l].groups.findIndex(g=>g.id===gid); if(idx !== -1) { classesData[l].groups.splice(idx,1); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); return; } } }
-    
-    function showTransferModal(studentId) {
-        let studentData = findGroupAndStudent(studentId);
-        if(!studentData) return;
-        let sourceGroup = studentData.group;
-        let currentLevelKey = studentData.level;
-        let otherGroups = classesData[currentLevelKey].groups.filter(g => g.id !== sourceGroup.id);
-        if(otherGroups.length === 0) {
-            alert("لا توجد مجموعات أخرى لنقل الطالب إليها");
-            return;
-        }
-        pendingTransfer = { studentId, sourceGroupId: sourceGroup.id, sourceLevel: currentLevelKey };
-        let select = document.getElementById("targetGroupSelect");
-        select.innerHTML = otherGroups.map(g => `<option value="${g.id}">${escapeHtml(g.name)}</option>`).join('');
-        document.getElementById("transferModal").style.display = "flex";
-    }
-    
-    function confirmTransfer() {
-        if(!pendingTransfer.studentId) return;
-        let targetGroupId = parseInt(document.getElementById("targetGroupSelect").value);
-        let sourceData = findGroupAndStudent(pendingTransfer.studentId);
-        if(!sourceData) { closeTransferModal(); return; }
-        let sourceGroup = sourceData.group;
-        let targetGroup = null;
-        for(let g of classesData[pendingTransfer.sourceLevel].groups) {
-            if(g.id === targetGroupId) { targetGroup = g; break; }
-        }
-        if(targetGroup && sourceGroup) {
-            let studentIndex = sourceGroup.students.findIndex(s => s.id === pendingTransfer.studentId);
-            if(studentIndex !== -1) {
-                let student = sourceGroup.students[studentIndex];
-                sourceGroup.students.splice(studentIndex, 1);
-                targetGroup.students.push(student);
-                saveToLocal();
-                renderCurrentLevelGroups();
-                renderResultsTab();
-                alert("تم نقل الطالب بنجاح");
-            }
-        }
-        closeTransferModal();
-    }
-    
-    function closeTransferModal() {
-        document.getElementById("transferModal").style.display = "none";
-        pendingTransfer = { studentId: null, sourceGroupId: null, sourceLevel: null };
-    }
-    
-    function attachGroupEvents() {
-        document.querySelectorAll('.student-role').forEach(s => s.onchange = handleRoleChange);
-        document.querySelectorAll('.delete-student-btn').forEach(btn => btn.onclick = handleDeleteStudent);
-        document.querySelectorAll('.grade-cell-input').forEach(inp => inp.onchange = handleGradeChange);
-        document.querySelectorAll('.add-bulk-grade').forEach(btn => btn.onclick = handleBulkGrade);
-        document.querySelectorAll('.add-student-to-group').forEach(btn => btn.onclick = handleAddStudent);
-        document.querySelectorAll('.delete-group-btn').forEach(btn => btn.onclick = handleDeleteGroup);
-        document.querySelectorAll('.transfer-student-btn').forEach(btn => btn.onclick = (e) => { let sid = parseInt(e.target.closest('button').dataset.student); showTransferModal(sid); });
-    }
-    
-    function addNewGroupToCurrentLevel() { let name = document.getElementById("newGroupName").value.trim(); if(!name) { alert("أدخل اسم المجموعة"); return; } classesData[currentLevel].groups.push({ id: nextGroupId++, name: name, students: [], bulkScores: {} }); saveToLocal(); document.getElementById("newGroupName").value = ""; renderCurrentLevelGroups(); renderResultsTab(); }
-    
-    function computeGroupsTotalBulkScores() { let res = []; for(let level in classesData) for(let group of classesData[level].groups) res.push({ groupDisplay: `${level} - ${group.name}`, totalScore: getTotalBulkScoreForGroup(group) }); return res; }
+    function showTransferModal(studentId) { let studentData = findGroupAndStudent(studentId); if(!studentData) return; let otherGroups = classesData[studentData.level].groups.filter(g => g.id !== studentData.group.id); if(otherGroups.length === 0) { alert("لا توجد مجموعات أخرى"); return; } pendingTransfer = { studentId, sourceGroupId: studentData.group.id, sourceLevel: studentData.level }; document.getElementById("targetGroupSelect").innerHTML = otherGroups.map(g => `<option value="${g.id}">${escapeHtml(g.name)}</option>`).join(''); document.getElementById("transferModal").style.display = "flex"; }
+    function confirmTransfer() { if(!pendingTransfer.studentId) return; let targetGroupId = parseInt(document.getElementById("targetGroupSelect").value); let sourceData = findGroupAndStudent(pendingTransfer.studentId); if(sourceData) { let targetGroup = classesData[pendingTransfer.sourceLevel].groups.find(g => g.id === targetGroupId); if(targetGroup) { let studentIdx = sourceData.group.students.findIndex(s => s.id === pendingTransfer.studentId); let student = sourceData.group.students[studentIdx]; sourceData.group.students.splice(studentIdx,1); targetGroup.students.push(student); saveToLocal(); renderCurrentLevelGroups(); renderResultsTab(); alert("تم النقل"); } } closeTransferModal(); }
+    function closeTransferModal() { document.getElementById("transferModal").style.display = "none"; pendingTransfer = {}; }
+    function attachGroupEvents() { document.querySelectorAll('.student-role').forEach(s => s.onchange = handleRoleChange); document.querySelectorAll('.delete-student-btn').forEach(btn => btn.onclick = handleDeleteStudent); document.querySelectorAll('.grade-cell-input').forEach(inp => inp.onchange = handleGradeChange); document.querySelectorAll('.add-bulk-grade').forEach(btn => btn.onclick = handleBulkGrade); document.querySelectorAll('.add-student-to-group').forEach(btn => btn.onclick = handleAddStudent); document.querySelectorAll('.delete-group-btn').forEach(btn => btn.onclick = handleDeleteGroup); document.querySelectorAll('.transfer-student-btn').forEach(btn => btn.onclick = (e) => { let sid = parseInt(e.target.closest('button').dataset.student); showTransferModal(sid); }); }
+    function addNewGroupToCurrentLevel() { let name = document.getElementById("newGroupName").value.trim(); if(!name) { alert("أدخل الاسم"); return; } classesData[currentLevel].groups.push({ id: nextGroupId++, name: name, students: [], bulkScores: {} }); saveToLocal(); document.getElementById("newGroupName").value = ""; renderCurrentLevelGroups(); renderResultsTab(); }
+    function computeGroupsTotalBulkScores() { let res = []; for(let l in classesData) for(let g of classesData[l].groups) res.push({ groupDisplay: `${l} - ${g.name}`, totalScore: getTotalBulkScoreForGroup(g) }); return res; }
     function renderResultsTab() { let container = document.getElementById("resultsContainer"); let res = computeGroupsTotalBulkScores(); if(!res.length) { container.innerHTML = "<div class='note'>لا توجد مجموعات بعد.</div>"; return; } container.innerHTML = res.map(r => `<div class="result-card"><div><strong>📌 ${escapeHtml(r.groupDisplay)}</strong></div><div>🏆 مجموع الإضافات: ${r.totalScore}</div></div>`).join(''); }
 
-    let currentAvailableGroups = [], rollTimeout = null;
-    function updateRandomPool() { currentAvailableGroups = classesData[currentLevel].groups.map(g => ({ id: g.id, name: g.name, level: currentLevel })); }
-    function showRandomPickerModal() { updateRandomPool(); let modal = document.getElementById("randomModal"), dice = document.getElementById("diceIcon"), resultDiv = document.getElementById("randomResult"), rollBtn = document.getElementById("rollDiceBtn"), resetBtn = document.getElementById("resetGroupsBtn"); let stopSpinAndPick = () => { dice.classList.remove('spin-dice-fast'); if(currentAvailableGroups.length === 0) { resultDiv.innerHTML = "⚠️ لا توجد مجموعات متاحة، قم بإرجاع القائمة."; return; } let rand = Math.floor(Math.random() * currentAvailableGroups.length); let chosen = currentAvailableGroups[rand]; currentAvailableGroups.splice(rand,1); resultDiv.innerHTML = `🎉 ${chosen.level} - ${chosen.name} 🎉<br><small>(تم استبعادها)</small>`; }; let startRoll = () => { if(rollTimeout) clearTimeout(rollTimeout); if(currentAvailableGroups.length===0 && classesData[currentLevel].groups.length>0) updateRandomPool(); if(currentAvailableGroups.length===0) { resultDiv.innerHTML = "⚠️ لا مجموعات متاحة، أعد ضبط القائمة."; return; } dice.classList.add('spin-dice-fast'); resultDiv.innerHTML = "🌀 يدور النرد بسرعة ... 7 ثوانٍ 🎲"; rollTimeout = setTimeout(() => { stopSpinAndPick(); rollTimeout = null; }, 7000); }; rollBtn.onclick = startRoll; dice.onclick = startRoll; resetBtn.onclick = () => { updateRandomPool(); resultDiv.innerHTML = `✨ تم إرجاع (${currentAvailableGroups.length}) مجموعة ✨`; if(rollTimeout) clearTimeout(rollTimeout); dice.classList.remove('spin-dice-fast'); }; modal.style.display = "flex"; document.getElementById("closeModalBtn").onclick = () => { if(rollTimeout) clearTimeout(rollTimeout); dice.classList.remove('spin-dice-fast'); modal.style.display = "none"; }; window.onclick = (e) => { if(e.target === modal) modal.style.display = "none"; }; }
+    // رسم الدائرة
+    function drawWheel(groups) {
+        if(!canvas) canvas = document.getElementById("wheelCanvas");
+        if(!canvas || groups.length === 0) return;
+        ctx = canvas.getContext("2d");
+        const width = canvas.width, height = canvas.height;
+        const centerX = width/2, centerY = height/2;
+        const radius = width/2 - 5;
+        const count = groups.length;
+        const angleStep = (Math.PI * 2) / count;
+        ctx.clearRect(0, 0, width, height);
+        for(let i = 0; i < count; i++) {
+            const startAngle = i * angleStep + currentRotation;
+            const endAngle = (i+1) * angleStep + currentRotation;
+            const color = `hsl(${(i * 360 / count)}, 70%, 55%)`;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(startAngle + angleStep/2);
+            ctx.textAlign = "center";
+            ctx.fillStyle = "white";
+            ctx.font = "bold 12px 'Segoe UI'";
+            ctx.shadowBlur = 2;
+            ctx.shadowColor = "black";
+            let text = groups[i].name.length > 12 ? groups[i].name.substring(0,10)+".." : groups[i].name;
+            ctx.fillText(text, radius * 0.65, 5);
+            ctx.restore();
+        }
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 25, 0, 2*Math.PI);
+        ctx.fillStyle = "white";
+        ctx.fill();
+        ctx.strokeStyle = "#333";
+        ctx.stroke();
+    }
+    
+    function updateAvailableGroups() {
+        let groups = classesData[currentLevel]?.groups || [];
+        currentAvailableGroups = groups.map(g => ({ id: g.id, name: g.name, level: currentLevel }));
+        wheelGroups = [...currentAvailableGroups];
+        currentRotation = 0;
+        drawWheel(wheelGroups);
+    }
+    
+    function startWheelSpin() {
+        if(currentAvailableGroups.length === 0) {
+            document.getElementById("randomResult").innerHTML = "⚠️ لا توجد مجموعات متاحة! اضغط 'إعادة ضبط القائمة'.";
+            return;
+        }
+        wheelGroups = [...currentAvailableGroups];
+        if(spinInterval) clearInterval(spinInterval);
+        if(spinTimeout) clearTimeout(spinTimeout);
+        spinInterval = setInterval(() => {
+            currentRotation = (currentRotation + 0.5) % (Math.PI * 2);
+            drawWheel(wheelGroups);
+        }, 20);
+        spinTimeout = setTimeout(() => {
+            clearInterval(spinInterval);
+            spinInterval = null;
+            let angle = currentRotation % (Math.PI * 2);
+            let segmentSize = (Math.PI * 2) / wheelGroups.length;
+            let winningIndex = Math.floor(((Math.PI * 2) - angle) / segmentSize) % wheelGroups.length;
+            let winner = wheelGroups[winningIndex];
+            let winnerIndexInAvailable = currentAvailableGroups.findIndex(g => g.id === winner.id);
+            if(winnerIndexInAvailable !== -1) {
+                currentAvailableGroups.splice(winnerIndexInAvailable, 1);
+            }
+            document.getElementById("randomResult").innerHTML = `🎉 المجموعة الفائزة: <strong>${winner.level} - ${winner.name}</strong> 🎉<br><small>(تم استبعادها، تبقى ${currentAvailableGroups.length} مجموعة)</small>`;
+            wheelGroups = [...currentAvailableGroups];
+            drawWheel(wheelGroups);
+            spinTimeout = null;
+        }, 3000);
+    }
+    
+    function resetWheel() {
+        updateAvailableGroups();
+        document.getElementById("randomResult").innerHTML = `✨ تم إعادة ضبط القائمة (${currentAvailableGroups.length} مجموعة متاحة) ✨`;
+        drawWheel(wheelGroups);
+    }
+    
+    function showRandomWheel() {
+        updateAvailableGroups();
+        if(currentAvailableGroups.length === 0) { alert("لا توجد مجموعات في هذا الفصل"); return; }
+        document.getElementById("randomModal").style.display = "flex";
+        document.getElementById("randomResult").innerHTML = `✨ اضغط تدوير لبدء الاختيار (${currentAvailableGroups.length} مجموعة متاحة) ✨`;
+        document.getElementById("spinWheelBtn").onclick = () => startWheelSpin();
+        document.getElementById("resetWheelBtn").onclick = () => resetWheel();
+    }
+    
+    // ساعة رملية تفاعلية واقعية مع حركة الرمال
+    let sandAnimationInterval = null;
+    function startRealHourglass() {
+        if(sandAnimationInterval) clearInterval(sandAnimationInterval);
+        let secondsLeft = 60;
+        const topRect = document.getElementById("topRect");
+        const bottomRect = document.getElementById("bottomRect");
+        const sandStream = document.getElementById("sandStream");
+        const timerDisplay = document.getElementById("timerCountdown");
+        
+        // إظهار تيار الرمل
+        sandStream.setAttribute("opacity", "0.9");
+        
+        sandAnimationInterval = setInterval(() => {
+            secondsLeft--;
+            if(secondsLeft >= 0) {
+                let percent = (secondsLeft / 60) * 100;
+                // تحديث الرمل العلوي (يتناقص)
+                let topHeight = 70 * (percent / 100);
+                let topY = 15 + (70 - topHeight);
+                topRect.setAttribute("height", topHeight);
+                topRect.setAttribute("y", topY);
+                // تحديث الرمل السفلي (يتزايد)
+                let bottomHeight = 70 * ((100 - percent) / 100);
+                let bottomY = 195 + (70 - bottomHeight);
+                bottomRect.setAttribute("height", bottomHeight);
+                bottomRect.setAttribute("y", bottomY);
+                // تحديث المؤقت
+                let mins = Math.floor(secondsLeft / 60);
+                let secs = secondsLeft % 60;
+                timerDisplay.innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+                
+                // تأثير تدفق الرمل
+                if(secondsLeft > 0) {
+                    sandStream.setAttribute("opacity", "0.9");
+                    sandStream.classList.add("sand-stream");
+                }
+            }
+            if(secondsLeft <= 0) {
+                clearInterval(sandAnimationInterval);
+                sandAnimationInterval = null;
+                sandStream.setAttribute("opacity", "0");
+                timerDisplay.innerText = "انتهى! ⏰";
+                setTimeout(() => document.getElementById("timerModal").style.display = "none", 2000);
+            }
+        }, 1000);
+    }
+    
+    function showTimer() {
+        const timerModal = document.getElementById("timerModal");
+        if(sandAnimationInterval) clearInterval(sandAnimationInterval);
+        // إعادة تعيين الرمال
+        const topRect = document.getElementById("topRect");
+        const bottomRect = document.getElementById("bottomRect");
+        const sandStream = document.getElementById("sandStream");
+        if(topRect) { topRect.setAttribute("height", "70"); topRect.setAttribute("y", "15"); }
+        if(bottomRect) { bottomRect.setAttribute("height", "0"); bottomRect.setAttribute("y", "265"); }
+        if(sandStream) sandStream.setAttribute("opacity", "0");
+        document.getElementById("timerCountdown").innerText = "01:00";
+        timerModal.style.display = "flex";
+        startRealHourglass();
+        document.getElementById("closeTimerBtn").onclick = () => {
+            if(sandAnimationInterval) clearInterval(sandAnimationInterval);
+            sandAnimationInterval = null;
+            timerModal.style.display = "none";
+        };
+    }
 
-    function setupTabs() { document.querySelectorAll('.tab-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active'); if(btn.dataset.tab === 'tab-weeks') renderWeeksTab(); else if(btn.dataset.tab === 'tab-classes') renderCurrentLevelGroups(); else renderResultsTab(); }; }); }
-    function setupClassLevels() { document.querySelectorAll('.class-level-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.class-level-btn').forEach(b=>b.classList.remove('active-level')); btn.classList.add('active-level'); currentLevel = btn.dataset.level; renderCurrentLevelGroups(); }; }); }
+    function setupTabs() { document.querySelectorAll('.tab-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active'); if(btn.dataset.tab === 'tab-weeks') renderWeeksTab(); else if(btn.dataset.tab === 'tab-classes') renderCurrentLevelGroups(); else renderResultsTab(); }); }
+    function setupClassLevels() { document.querySelectorAll('.class-level-btn').forEach(btn => btn.onclick = () => { document.querySelectorAll('.class-level-btn').forEach(b=>b.classList.remove('active-level')); btn.classList.add('active-level'); currentLevel = btn.dataset.level; renderCurrentLevelGroups(); }); }
 
-    document.addEventListener("DOMContentLoaded", () => { loadFromLocal(); renderWeeksTab(); setupTabs(); setupClassLevels(); document.getElementById("addGroupBtn").onclick = () => addNewGroupToCurrentLevel(); document.getElementById("randomPickerBtn").onclick = () => showRandomPickerModal(); document.getElementById("confirmTransferBtn").onclick = () => confirmTransfer(); document.getElementById("closeTransferBtn").onclick = () => closeTransferModal(); renderCurrentLevelGroups(); renderResultsTab(); });
+    document.addEventListener("DOMContentLoaded", () => {
+        loadFromLocal();
+        renderWeeksTab();
+        setupTabs();
+        setupClassLevels();
+        document.getElementById("addGroupBtn").onclick = () => addNewGroupToCurrentLevel();
+        document.getElementById("randomPickerBtn").onclick = () => showRandomWheel();
+        document.getElementById("confirmTransferBtn").onclick = () => confirmTransfer();
+        document.getElementById("closeTransferBtn").onclick = () => closeTransferModal();
+        document.getElementById("closeModalBtn").onclick = () => { if(spinInterval) clearInterval(spinInterval); if(spinTimeout) clearTimeout(spinTimeout); document.getElementById("randomModal").style.display = "none"; };
+        document.getElementById("timerBtn").onclick = () => showTimer();
+        renderCurrentLevelGroups();
+        renderResultsTab();
+    });
     function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 </script>
 </body>
